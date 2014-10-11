@@ -1,5 +1,6 @@
 olc-overlapping
 ===============
+[![Build Status](https://secure.travis-ci.org/dejak/olc-overlapping.png?branch=master)](http://travis-ci.org/dejak/olc-overlapping)
 
 OLC assembly overlapping for http://schatzlab.cshl.edu/teaching/2013/pacbioasm.shtml
 
