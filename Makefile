@@ -15,7 +15,7 @@ endif
 
 CXXFLAGS += $(OFLAGS) $(DFLAGS) -I.
 
-OBJS = main.o fastq.o fastqsequence.o
+OBJS = main.o
 PROGS = olc-overlapping
 
 all: $(OBJS) $(PROGS)
