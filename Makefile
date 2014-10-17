@@ -15,7 +15,7 @@ endif
 
 CXXFLAGS += $(OFLAGS) $(DFLAGS) -I.
 
-OBJS = main.o
+OBJS = main.o fastq.o fastqsequence.o
 PROGS = olc-overlapping
 
 all: $(OBJS) $(PROGS)
@@ -32,7 +32,7 @@ clean:
 
 .PHONY: test
 test:
-	@echo "Tests should go here..."
+	@make -C test
 
 $(OBJS): %.o: src/%.cpp
 	@$(CXX) -o bin/$@ $(CXXFLAGS) -c $<
