@@ -1,8 +1,14 @@
 all: $(patsubst %.cpp, %.out, $(wildcard *.cpp))
 
 # compile each .cpp file into .out file, run it and delete it after
-%.out: %.cpp Makefile
-	@g++ $< -o $@ -I.. -std=c++0x
+.PHONY: %.o
+%.o: %.cpp Makefile
+	@g++ -c -I.. -I../../src -std=c++0x $< -o $@
+
+.PHONY: %.out
+%.out: %.o
+	@rm -f $@
+	@g++ -std=c++0x ../../bin/*.o $< -o $@
 	@./$@
-	@rm $@
+	@rm $@ $<
 
