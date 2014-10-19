@@ -5,6 +5,17 @@
 #include "reader.hpp"
 #include "sequence.hpp"
 
+TEST_CASE("reader can read nonexisting files", "[reader]")
+{
+  FASTQ::Reader reader("../data/nonexisting.fastq");
+  const auto sequences = reader._readSequences();
+
+  SECTION("read nonexisting file")
+  {
+    REQUIRE(sequences.empty() == true);
+  }
+}
+
 TEST_CASE("reader can read empty fastq files", "[reader]")
 {
   FASTQ::Reader reader("../data/empty.fastq");
