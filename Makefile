@@ -15,7 +15,7 @@ endif
 
 CXXFLAGS += $(OFLAGS) $(DFLAGS) -I.
 
-OBJS = main.o
+OBJS = main.o reader.o sequence.o
 PROGS = olc-overlapping
 
 all: $(OBJS) $(PROGS)
@@ -23,7 +23,6 @@ all: $(OBJS) $(PROGS)
 olc-overlapping: $(OBJS)
 	@$(CXX) -o bin/bioinf $(addprefix bin/, $(OBJS)) $(CXXFLAGS) $(LFLAGS)
 	@strip bin/bioinf
-	@echo "[BIN] $@ created. Run 'make test' to run tests."
 
 .PHONY: clean
 clean:
