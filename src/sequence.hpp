@@ -4,24 +4,27 @@
 #include <string>
 #include <vector>
 
-namespace FASTQ {
+#include "nucleotidesequence.hpp"
 
-class Sequence
+namespace OLC
+{
+
+class FASTQSequence
 {
   private:
-    std::string _identifier;
-    std::string _description;
-    std::string _sequence;
-    std::string _quality;
+    std::string identifier_;
+    std::string description_;
+    NucleotideSequence nucleotides_;
+    std::string quality_;
 
   public:
-    Sequence(const std::string& identifier, const std::string& description, const std::string& sequence, const std::string& quality);
-    ~Sequence();
+    FASTQSequence(const std::string& identifier, const std::string& description, const NucleotideSequence& nucleotides, const std::string& quality);
+    ~FASTQSequence();
 
-    std::string _getIdentifier()   const { return _identifier; }
-    std::string _getDescription()  const { return _description; }
-    std::string _getSequence()     const { return _sequence; }
-    std::string _getQuality()      const { return _quality; }
+    const std::string& getIdentifier()        const { return identifier_; }
+    const std::string& getDescription()       const { return description_; }
+    OLC::NucleotideSequence getNucleotides()  const { return nucleotides_; }
+    const std::string& getQuality()           const { return quality_; }
 };
 
 }

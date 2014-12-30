@@ -1,17 +1,18 @@
 #include "sequence.hpp"
 
-namespace FASTQ {
+namespace OLC
+{
 
-Sequence::Sequence(const std::string& identifier, const std::string& description, const std::string& sequence, const std::string& quality)
-  : _identifier(identifier),
-    _description(description),
-    _sequence(sequence),
-    _quality(quality)
+FASTQSequence::FASTQSequence(const std::string& identifier, const std::string& description, const OLC::NucleotideSequence& nucleotides, const std::string& quality)
+  : identifier_(identifier),
+    description_(description),
+    nucleotides_(nucleotides),
+    quality_(quality)
 {
 
 }
 
-Sequence::~Sequence()
+FASTQSequence::~FASTQSequence()
 {
 
 }

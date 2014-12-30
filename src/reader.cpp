@@ -2,31 +2,35 @@
 
 #include <fstream>
 #include <iostream>
+#include <random>
+#include <iostream>
 
+#include "nucleotide.hpp"
+#include "nucleotidesequence.hpp"
 #include "sequence.hpp"
 
-namespace FASTQ {
-
-Reader::Reader(const std::string& filename)
-  : _filename(filename)
+namespace OLC
 {
-  
-}
 
-Reader::~Reader() {
+FASTQReader::FASTQReader(const std::string& filename)
+  : filename_(filename)
+{
 
 }
 
-std::vector<Sequence>& Reader::_readSequences()
+FASTQReader::~FASTQReader() {
+
+}
+
+const std::vector<FASTQSequence>& FASTQReader::readSequences()
 {
-  std::ifstream input(_filename);
-  _sequences = std::vector<Sequence>();
+  std::ifstream input(filename_);
+  sequences_ = std::vector<FASTQSequence>();
+
+  // TODO (josko): throw?
 
   if (input.fail())
-    return _sequences;
-
-  // TODO (josko): check legal characters
-  // TODO (josko): potentially generate minimizers here
+    return sequences_;
 
   while (!input.eof())
   {
@@ -52,7 +56,37 @@ std::vector<Sequence>& Reader::_readSequences()
     }
 
     std::string sequence;
+    std::string nucleotides;
+    std::random_device rd;
+    std::mt19937 generator(rd());
+    std::uniform_int_distribution<> distribution(0, 3);
     std::getline(input, sequence);
+    NucleotideSequence nucleotideSequence;
+
+    nucleotideSequence.reserve(sequence.size());
+
+    for (const auto c : sequence)
+    {
+      switch (c)
+      {
+        case 'A': nucleotideSequence.push_back(NucleotideLetter::A); break;
+        case 'T': nucleotideSequence.push_back(NucleotideLetter::T); break;
+        case 'C': nucleotideSequence.push_back(NucleotideLetter::C); break;
+        case 'G': nucleotideSequence.push_back(NucleotideLetter::G); break;
+        case '-':
+        {
+          const uint32_t randomNucleotide = distribution(generator);
+          const NucleotideLetter nucleotide = static_cast<NucleotideLetter>(randomNucleotide);
+          nucleotideSequence.push_back(nucleotide);
+          break;
+        }
+        default:
+        {
+          std::cout << "ERROR: Unrecognized nucleotide " << c << " detected\n";
+          break;
+        }
+      }
+    }
 
     std::string plus;
     std::getline(input, plus);
@@ -66,14 +100,12 @@ std::vector<Sequence>& Reader::_readSequences()
     std::getline(input, quality);
 
     if (!identifier.empty() && !sequence.empty() && !plus.empty() && !quality.empty())
-    {
-      _sequences.push_back(Sequence(identifier, description, sequence, quality));
-    }
+      sequences_.push_back(FASTQSequence(identifier, description, nucleotideSequence, quality));
   }
 
   input.close();
 
-  return _sequences;
+  return sequences_;
 }
 
 }

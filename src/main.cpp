@@ -8,7 +8,7 @@ int main(int argc, char** argv)
 {
   std::ios_base::sync_with_stdio(false);
 
-  // TODO (josko): use getopts
+  // TODO (josko): use getopts?
 
   if (argc != 3)
   {
@@ -16,15 +16,17 @@ int main(int argc, char** argv)
     return 1;
   }
 
-  const int L = std::stoi(argv[1]);
+  // L = w + k -1 with w <= k
+
+  const uint32_t L = std::stoi(argv[1]);
   const std::string file = std::string(argv[2]);
 
   // read phase
 
-  std::unique_ptr<FASTQ::Reader> reader(new FASTQ::Reader(file));
-  std::vector<FASTQ::Sequence> sequences = reader.get()->_readSequences();
+  std::unique_ptr<OLC::FASTQReader> reader(new OLC::FASTQReader(file));
+  std::vector<OLC::FASTQSequence> sequences = reader.get()->readSequences();
 
-  // calculate minimizers
+  // calculate minimizers - both interior and end minimizers
 
   // find overlaps
 

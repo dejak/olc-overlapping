@@ -4,20 +4,21 @@
 #include <string>
 #include <vector>
 
-namespace FASTQ {
+namespace OLC
+{
 
-class Sequence;
-class Reader
+class FASTQSequence;
+class FASTQReader
 {
   private:
-    std::string _filename;
-    std::vector<Sequence> _sequences;
+    std::string filename_;
+    std::vector<FASTQSequence> sequences_;
 
   public:
-    Reader(const std::string& filename);
-    ~Reader();
+    FASTQReader(const std::string& filename);
+    ~FASTQReader();
 
-    std::vector<Sequence>& _readSequences();
+    const std::vector<FASTQSequence>& readSequences();
 };
 
 }

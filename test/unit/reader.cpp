@@ -7,8 +7,8 @@
 
 TEST_CASE("reader can read nonexisting files", "[reader]")
 {
-  FASTQ::Reader reader("../data/nonexisting.fastq");
-  const auto sequences = reader._readSequences();
+  OLC::FASTQReader reader("../data/nonexisting.fastq");
+  const auto sequences = reader.readSequences();
 
   SECTION("read nonexisting file")
   {
@@ -18,8 +18,8 @@ TEST_CASE("reader can read nonexisting files", "[reader]")
 
 TEST_CASE("reader can read empty fastq files", "[reader]")
 {
-  FASTQ::Reader reader("../data/empty.fastq");
-  const auto sequences = reader._readSequences();
+  OLC::FASTQReader reader("../data/empty.fastq");
+  const auto sequences = reader.readSequences();
 
   SECTION("read empty file")
   {
@@ -29,8 +29,8 @@ TEST_CASE("reader can read empty fastq files", "[reader]")
 
 TEST_CASE("reader can read an invalid file", "[reader]")
 {
-  FASTQ::Reader reader("../data/invalid.fastq");
-  const auto sequences = reader._readSequences();
+  OLC::FASTQReader reader("../data/invalid.fastq");
+  const auto sequences = reader.readSequences();
 
   SECTION("read invalid data")
   {
@@ -39,52 +39,71 @@ TEST_CASE("reader can read an invalid file", "[reader]")
 
   SECTION("the valid part is correct")
   {
-    const FASTQ::Sequence sequence= sequences.at(0);
+    const auto sequence = sequences.at(0);
 
-    REQUIRE(sequence._getDescription() == "description");
-    REQUIRE(sequence._getIdentifier() == "identifier");
-    REQUIRE(sequence._getSequence() == "AAAATTTTCGGGG");
-    REQUIRE(sequence._getQuality() == "!!!!!!!!!!!!!");
+    REQUIRE(sequence.getDescription() == "description");
+    REQUIRE(sequence.getIdentifier() == "identifier");
+    REQUIRE(sequence.getNucleotides().toString() == "AAAATTTTCGGGG");
+    REQUIRE(sequence.getQuality() == "!!!!!!!!!!!!!");
   }
 }
 
 TEST_CASE("reader can read a valid file", "[reader]")
 {
-  FASTQ::Reader reader("../data/valid.fastq");
-  const auto sequences = reader._readSequences();
+  OLC::FASTQReader reader("../data/valid.fastq");
+  const auto sequences = reader.readSequences();
 
   SECTION("read valid data")
   {
-    REQUIRE(sequences.size() == 3);
+    REQUIRE(sequences.size() == 4);
   }
 
   SECTION("first sequence is correct")
   {
-    const FASTQ::Sequence sequence= sequences.at(0);
+    const auto sequence = sequences.at(0);
 
-    REQUIRE(sequence._getIdentifier() == "identifier");
-    REQUIRE(sequence._getDescription() == "description");
-    REQUIRE(sequence._getSequence() == "AAAATTTTCGGGG");
-    REQUIRE(sequence._getQuality() == "!!!!!!!!!!!!!");
+    REQUIRE(sequence.getIdentifier() == "identifier");
+    REQUIRE(sequence.getDescription() == "description");
+    REQUIRE(sequence.getNucleotides().toString() == "AAAATTTTCGGGG");
+    REQUIRE(sequence.getQuality() == "!!!!!!!!!!!!!");
   }
 
   SECTION("second sequence is correct")
   {
-    const FASTQ::Sequence sequence= sequences.at(1);
+    const auto sequence = sequences.at(1);
 
-    REQUIRE(sequence._getIdentifier() == "identifier2");
-    REQUIRE(sequence._getDescription() == "");
-    REQUIRE(sequence._getSequence() == "AAAATTTTCGGGT");
-    REQUIRE(sequence._getQuality() == "!!!!!!!!!!!!!");
+    REQUIRE(sequence.getIdentifier() == "identifier2");
+    REQUIRE(sequence.getDescription() == "");
+    REQUIRE(sequence.getNucleotides().toString() == "AAAATTTTCGGGT");
+    REQUIRE(sequence.getQuality() == "!!!!!!!!!!!!!");
   }
 
   SECTION("third sequence is correct")
   {
-    const FASTQ::Sequence sequence= sequences.at(2);
+    const auto sequence = sequences.at(2);
 
-    REQUIRE(sequence._getDescription() == "description3");
-    REQUIRE(sequence._getIdentifier() == "identifier3");
-    REQUIRE(sequence._getSequence() == "AAAATTTTCGGGC");
-    REQUIRE(sequence._getQuality() == "!!!!!!!!!!!!!");
+    REQUIRE(sequence.getIdentifier() == "identifier3");
+    REQUIRE(sequence.getDescription() == "description3");
+    REQUIRE(sequence.getNucleotides().toString() == "AAAATTTTCGGGC");
+    REQUIRE(sequence.getQuality() == "!!!!!!!!!!!!!");
+  }
+
+  SECTION("fourth sequence is random")
+  {
+    const auto sequence = sequences.at(3);
+    const auto nucleotideSequence = sequence.getNucleotides().getSequence();
+
+    REQUIRE(sequence.getIdentifier() == "random_sequence");
+    REQUIRE(sequence.getDescription() == "");
+
+    for (const auto nucleotide : nucleotideSequence)
+    {
+      // our reader should replace unknown reads aka dashes with
+      // random nucleotides
+
+      REQUIRE(nucleotide.getNucleotide() != '-');
+    }
+
+    REQUIRE(sequence.getQuality() == "!!!!!!!!!!!!!");
   }
 }
