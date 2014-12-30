@@ -28,6 +28,7 @@ install:
 
 script:
   - make
+  - make test
 
 notifications-policy: &notifications-policy
   on_success: change
