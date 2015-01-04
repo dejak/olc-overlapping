@@ -3,16 +3,15 @@
 namespace OLC
 {
 
-FASTQSequence::FASTQSequence(const std::string& identifier, const std::string& description, const OLC::NucleotideSequence& nucleotides, const std::string& quality)
+Sequence::Sequence(const std::string& identifier, const std::string& description, std::unique_ptr<OLC::Nucleotides> nucleotides)
   : identifier_(identifier),
     description_(description),
-    nucleotides_(nucleotides),
-    quality_(quality)
+    nucleotides_(std::move(nucleotides))
 {
 
 }
 
-FASTQSequence::~FASTQSequence()
+Sequence::~Sequence()
 {
 
 }

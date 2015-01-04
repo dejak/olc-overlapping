@@ -23,8 +23,8 @@ int main(int argc, char** argv)
 
   // read phase
 
-  std::unique_ptr<OLC::FASTQReader> reader(new OLC::FASTQReader(file));
-  std::vector<OLC::FASTQSequence> sequences = reader.get()->readSequences();
+  //std::unique_ptr<OLC::Reader> reader(new OLC::Reader(file));
+  //const std::vector<OLC::Sequence> sequences = reader.get()->readSequences();
 
   // calculate minimizers - both interior and end minimizers
 

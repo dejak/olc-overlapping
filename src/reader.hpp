@@ -1,26 +1,20 @@
 #ifndef READER_HPP_
 #define READER_HPP_
 
-#include <string>
 #include <vector>
+#include <memory>
+
+#include "sequence.hpp"
 
 namespace OLC
 {
 
-class FASTQSequence;
-class FASTQReader
+class Reader
 {
-  private:
-    std::string filename_;
-    std::vector<FASTQSequence> sequences_;
-
   public:
-    FASTQReader(const std::string& filename);
-    ~FASTQReader();
-
-    const std::vector<FASTQSequence>& readSequences();
+    virtual const std::vector<std::unique_ptr<OLC::Sequence>> readSequences() = 0;
 };
 
 }
 
-#endif  // READER_HPP_
+#endif // READER_HPP_

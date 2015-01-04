@@ -1,5 +1,7 @@
 ARCH = $(shell uname -m)
 
+CXX = clang++
+
 ifndef CXX
   CXX = g++
 endif
@@ -15,7 +17,7 @@ endif
 
 CXXFLAGS += $(OFLAGS) $(DFLAGS) -I.
 
-OBJS = main.o reader.o sequence.o nucleotide.o nucleotidesequence.o
+OBJS = main.o nucleotide.o nucleotides.o fastqreader.o fastareader.o afg.o sequence.o
 PROGS = olc-overlapping
 
 all: $(OBJS) $(PROGS)
