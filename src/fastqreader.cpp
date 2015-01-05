@@ -94,12 +94,11 @@ const std::vector<std::unique_ptr<OLC::Sequence>> FASTQReader::readSequences()
     if (plus.empty() || plus.at(0) != '+')
       continue;
 
-    // quality is ignored
+    // ignore quality line
 
-    std::string quality;
-    std::getline(input, quality);
+    input.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-    if (!identifier.empty() && !sequence.empty() && !plus.empty() && !quality.empty())
+    if (!identifier.empty() && !sequence.empty() && !plus.empty())
     {
       std::unique_ptr<Sequence> pointer(new Sequence(identifier, description, std::move(nucleotideSequence)));
       sequences.push_back(std::move(pointer));
