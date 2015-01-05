@@ -7,7 +7,7 @@
 
 TEST_CASE("reader can read nonexisting files", "[reader]")
 {
-  OLC::FASTQReader reader("../data/nonexisting.fastq");
+  auto reader("../data/nonexisting.fastq");
   const auto sequences = reader.readSequences();
 
   SECTION("read nonexisting file")
@@ -18,7 +18,7 @@ TEST_CASE("reader can read nonexisting files", "[reader]")
 
 TEST_CASE("reader can read empty fastq files", "[reader]")
 {
-  OLC::FASTQReader reader("../data/empty.fastq");
+  auto reader("../data/empty.fastq");
   const auto sequences = reader.readSequences();
 
   SECTION("read empty file")
@@ -29,7 +29,7 @@ TEST_CASE("reader can read empty fastq files", "[reader]")
 
 TEST_CASE("reader can read an invalid file", "[reader]")
 {
-  OLC::FASTQReader reader("../data/invalid.fastq");
+  auto reader("../data/invalid.fastq");
   const auto sequences = reader.readSequences();
 
   SECTION("read invalid data")
@@ -50,7 +50,7 @@ TEST_CASE("reader can read an invalid file", "[reader]")
 
 TEST_CASE("reader can read a valid file", "[reader]")
 {
-  OLC::FASTQReader reader("../data/valid.fastq");
+  auto reader("../data/valid.fastq");
   const auto sequences = reader.readSequences();
 
   SECTION("read valid data")

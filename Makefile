@@ -17,7 +17,7 @@ endif
 
 CXXFLAGS += $(OFLAGS) $(DFLAGS) -I.
 
-OBJS = main.o nucleotide.o nucleotides.o fastqreader.o fastareader.o afg.o sequence.o
+OBJS = main.o nucleotide.o nucleotides.o fastq_reader.o fasta_reader.o afg.o sequence.o format_reader.o
 PROGS = olc-overlapping
 
 all: $(OBJS) $(PROGS)

@@ -1,15 +1,12 @@
 #ifndef READER_HPP_
 #define READER_HPP_
 
-#include <vector>
-#include <memory>
-
 #include "sequence.hpp"
 
 namespace OLC
 {
 
-class Reader
+class InputReader
 {
   public:
     virtual const std::vector<std::unique_ptr<OLC::Sequence>> readSequences() = 0;
