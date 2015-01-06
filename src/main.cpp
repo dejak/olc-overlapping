@@ -12,7 +12,7 @@ int main(int argc, char** argv)
 
   if (argc != 3)
   {
-    std::cout << "Usage " << argv[0] << " <overlap length L> <fastq file>\n";
+    std::cout << "Usage " << argv[0] << " <minimum overlap length L> <FASTQ or FASTA file>\n";
     return 1;
   }
 
