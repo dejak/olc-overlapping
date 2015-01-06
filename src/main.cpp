@@ -1,14 +1,11 @@
 #include <iostream>
 #include <memory>
 
-#include "reader.hpp"
-#include "sequence.hpp"
+#include "input_file_reader.hpp"
 
 int main(int argc, char** argv)
 {
   std::ios_base::sync_with_stdio(false);
-
-  // TODO (josko): use getopts?
 
   if (argc != 3)
   {
@@ -23,8 +20,8 @@ int main(int argc, char** argv)
 
   // read phase
 
-  //std::unique_ptr<OLC::Reader> reader(new OLC::Reader(file));
-  //const std::vector<OLC::Sequence> sequences = reader.get()->readSequences();
+  OLC::InputFileReader reader(file);
+  const std::vector<std::unique_ptr<OLC::Sequence>> sequences = reader.readSequences();
 
   // calculate minimizers - both interior and end minimizers
 
