@@ -1,5 +1,4 @@
 #include <iostream>
-#include <memory>
 
 #include "input_file_reader.hpp"
 
@@ -21,7 +20,7 @@ int main(int argc, char** argv)
   // read phase
 
   OLC::InputFileReader reader(file);
-  const std::vector<std::unique_ptr<OLC::Sequence>> sequences = reader.readSequences();
+  std::vector<std::unique_ptr<OLC::Sequence>> sequences = reader.readSequences();
 
   // calculate minimizers - both interior and end minimizers
 

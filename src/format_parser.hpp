@@ -15,12 +15,12 @@ class FormatParser
 {
   public:
     virtual const std::vector<std::unique_ptr<OLC::Sequence>> readSequences() = 0;
+    virtual ~FormatParser();
 
   protected:
     std::ifstream& in_;
 
     FormatParser(std::ifstream& in);
-    virtual ~FormatParser();
 
     NucleotideLetter getRandomNucleotide() const;
 };
