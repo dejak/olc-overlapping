@@ -1,22 +1,22 @@
-#include "format_reader.hpp"
+#include "format_parser.hpp"
 
 #include <random>
 
 namespace OLC
 {
 
-IFormatReader::IFormatReader(std::ifstream& in)
+FormatParser::FormatParser(std::ifstream& in)
   : in_(in)
 {
 
 }
 
-IFormatReader::~IFormatReader()
+FormatParser::~FormatParser()
 {
   in_.close();
 }
 
-NucleotideLetter IFormatReader::getRandomNucleotide() const
+NucleotideLetter FormatParser::getRandomNucleotide() const
 {
   std::random_device rd;
   std::mt19937 generator(rd());

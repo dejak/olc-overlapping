@@ -1,5 +1,5 @@
-#ifndef FORMAT_READER_HPP_
-#define FORMAT_READER_HPP_
+#ifndef FORMAT_PARSER_HPP_
+#define FORMAT_PARSER_HPP_
 
 #include <vector>
 #include <memory>
@@ -11,7 +11,7 @@
 namespace OLC
 {
 
-class IFormatReader
+class FormatParser
 {
   public:
     virtual const std::vector<std::unique_ptr<OLC::Sequence>> readSequences() = 0;
@@ -19,12 +19,12 @@ class IFormatReader
   protected:
     std::ifstream& in_;
 
-    IFormatReader(std::ifstream& in);
-    virtual ~IFormatReader();
+    FormatParser(std::ifstream& in);
+    virtual ~FormatParser();
 
     NucleotideLetter getRandomNucleotide() const;
 };
 
 }
 
-#endif // FORMAT_READER_HPP_
+#endif // FORMAT_PARSER_HPP_

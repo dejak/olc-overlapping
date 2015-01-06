@@ -1,32 +1,32 @@
-#include "fastq_reader.hpp"
+#include "fastq_parser.hpp"
 
 #include <limits>
 
 namespace OLC
 {
 
-FASTQReader::FASTQReader(std::ifstream& in)
-  : IFormatReader(in)
+FASTQParser::FASTQParser(std::ifstream& in)
+  : FormatParser(in)
 {
 
 }
 
-FASTQReader::~FASTQReader()
+FASTQParser::~FASTQParser()
 {
 
 }
 
-const std::vector<std::unique_ptr<OLC::Sequence>> FASTQReader::readSequences()
+const std::vector<std::unique_ptr<OLC::Sequence>> FASTQParser::readSequences()
 {
   std::vector<std::unique_ptr<Sequence>> sequences;
 
-  if (IFormatReader::in_.fail())
+  if (FormatParser::in_.fail())
     return sequences;
 
-  while (!IFormatReader::in_.eof())
+  while (!FormatParser::in_.eof())
   {
     std::string identifier;
-    std::getline(IFormatReader::in_, identifier);
+    std::getline(FormatParser::in_, identifier);
 
     // invalid line, try to start over
 
@@ -50,7 +50,7 @@ const std::vector<std::unique_ptr<OLC::Sequence>> FASTQReader::readSequences()
     std::unique_ptr<Nucleotides> nucleotides(new Nucleotides());
     nucleotides.get()->reserve(sequence.size());
 
-    std::getline(IFormatReader::in_, sequence);
+    std::getline(FormatParser::in_, sequence);
 
     for (const auto c : sequence)
     {
@@ -60,13 +60,13 @@ const std::vector<std::unique_ptr<OLC::Sequence>> FASTQReader::readSequences()
         case 'T': nucleotides.get()->push_back(NucleotideLetter::T); break;
         case 'C': nucleotides.get()->push_back(NucleotideLetter::C); break;
         case 'G': nucleotides.get()->push_back(NucleotideLetter::G); break;
-        case '-': nucleotides.get()->push_back(IFormatReader::getRandomNucleotide()); break;
+        case '-': nucleotides.get()->push_back(FormatParser::getRandomNucleotide()); break;
         default: break;
       }
     }
 
     std::string plus;
-    std::getline(IFormatReader::in_, plus);
+    std::getline(FormatParser::in_, plus);
 
     // invalid line, try to start over
 
@@ -75,7 +75,7 @@ const std::vector<std::unique_ptr<OLC::Sequence>> FASTQReader::readSequences()
 
     // ignore quality line
 
-    IFormatReader::in_.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+    FormatParser::in_.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
     if (!identifier.empty() && !sequence.empty() && !plus.empty())
     {
