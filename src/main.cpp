@@ -1,6 +1,7 @@
 #include <iostream>
 
 #include "input_file_reader.hpp"
+#include "minimizer.hpp"
 
 int main(int argc, char** argv)
 {
@@ -23,6 +24,21 @@ int main(int argc, char** argv)
   std::vector<std::unique_ptr<OLC::Sequence>> sequences = reader.readSequences();
 
   // calculate minimizers - both interior and end minimizers
+  // TODO: Maknuti nakon testinga
+  std::vector<OLC::Nucleotide> vec;
+  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x02)));
+  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x03)));
+  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x01)));
+  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x00)));
+  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x03)));
+  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x02)));
+  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x01)));
+  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x00)));
+  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x01))); 
+
+
+  minimize(vec, 4, 3);
+
 
   // find overlaps
 
