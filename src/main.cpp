@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "input_file_reader.hpp"
-#include "minimizer.hpp"
+#include "minimizator.hpp"
 
 int main(int argc, char** argv)
 {
@@ -35,6 +35,12 @@ int main(int argc, char** argv)
   vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x01)));
   vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x00)));
   vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x01))); 
+  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x02)));
+  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x03))); 
+  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x03)));
+  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x01)));
+  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x00)));
+  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x01)));  
 
 
   minimize(vec, 4, 3);
