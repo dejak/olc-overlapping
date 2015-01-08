@@ -43,7 +43,7 @@ int main(int argc, char** argv)
   vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x01)));  
 
 
-  minimize(vec, 4, 3);
+  minimize(vec, 3, 3);
 
 
   // find overlaps

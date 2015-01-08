@@ -21,4 +21,9 @@ char Nucleotide::getNucleotide() const
   }
 }
 
+int Nucleotide::getValue() const
+{
+	return value_;
+}
+
 }

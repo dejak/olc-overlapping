@@ -1,5 +1,6 @@
 #include "minimizator.hpp"
-#include <iostream>
+#include <iostream> 
+#include <algorithm>
 
 namespace OLC
 {
@@ -21,25 +22,26 @@ namespace OLC
 		return nv;
 	}
 
-	std::vector<std::vector<Nucleotide>> findKMers(const std::vector<Nucleotide> &vector, int k) {
-		std::vector<std::vector<Nucleotide>> kMers;
+	std::vector<Minimizer> findKMers(const std::vector<Nucleotide> &vector, int k) {
+		std::vector<Minimizer> kMers;
 
 		for (int i = 0; i < vector.size() - k + 1; i++) {
-			kMers.push_back(slice(vector, i, i + k));
+			kMers.push_back(Minimizer(slice(vector, i, i+k)));
 		}
 
 		//TODO: Sortiraj ovo
+		std::sort(kMers.begin(), kMers.end());
 		return kMers;
 	}
 
 
-	std::vector<std::vector<Nucleotide>> findInnerMinimizers(const std::vector<Nucleotide> &vector, int w, int k) {
-		std::vector<std::vector<Nucleotide>> minimizers;
+	std::vector<Minimizer> findInnerMinimizers(const std::vector<Nucleotide> &vector, int w, int k) {
+		std::vector<Minimizer> minimizers;
 
 		for (int i = 0; i < vector.size() - w - k + 2; i++) {
 			std::vector<Nucleotide> window = slice(vector, i, i + w + k - 1);
-			std::vector<std::vector<Nucleotide>> kMers = findKMers(window, k);
-			std::vector<Nucleotide> minimizer = kMers[0];
+			std::vector<Minimizer> kMers = findKMers(window, k);
+			Minimizer minimizer = kMers[0];
 			//TODO: Samo ako vec ne postoji
 			minimizers.push_back(minimizer);
 		}
@@ -47,34 +49,34 @@ namespace OLC
 		return minimizers;
 	}
 
-	std::vector<std::vector<Nucleotide>> findOuterMinimizers(const std::vector<Nucleotide> &vector, int k) {
-		std::vector<std::vector<Nucleotide>> minimizers;
+	std::vector<Minimizer> findOuterMinimizers(const std::vector<Nucleotide> &vector, int k) {
+		std::vector<Minimizer> minimizers;
 
-		minimizers.push_back(slice(vector, 0, k));
-		minimizers.push_back(slice(vector, vector.size() - k, vector.size()));
+		minimizers.push_back(Minimizer(slice(vector, 0, k)));
+		minimizers.push_back(Minimizer(slice(vector, vector.size() - k, vector.size())));
 	
 		return minimizers;
 	}
 
 
-	std::vector<std::vector<Nucleotide>> minimize(std::vector<Nucleotide> nucleotideVector, int w, int k) { 
-		std::vector<std::vector<Nucleotide>> innerMinimizers = findInnerMinimizers(nucleotideVector, w, k);
-		std::vector<std::vector<Nucleotide>> outerMinimizers = findOuterMinimizers(nucleotideVector, k);
+	std::vector<Minimizer> minimize(std::vector<Nucleotide> nucleotideVector, int w, int k) { 
+		std::vector<Minimizer> innerMinimizers = findInnerMinimizers(nucleotideVector, w, k);
+		std::vector<Minimizer> outerMinimizers = findOuterMinimizers(nucleotideVector, k);
 
 		std::cout << "INNER MINIMIZERS:" << std::endl;
 		for (int i = 0; i < innerMinimizers.size(); i++) {
-			std::vector<Nucleotide> minimizer = innerMinimizers[i];
+			Minimizer minimizer = innerMinimizers[i];
 			for (int j = 0; j < minimizer.size(); j++) {
-				std::cout << minimizer[j].getNucleotide() << " ";
+				std::cout << minimizer[j].getValue() << " ";
 			}
 			std::cout << std::endl;
 		}
 
 		std::cout << "OUTER MINIMIZERS:" << std::endl;
 		for (int i = 0; i < outerMinimizers.size(); i++) {
-			std::vector<Nucleotide> minimizer = outerMinimizers[i];
+			Minimizer minimizer = outerMinimizers[i];
 			for (int j = 0; j < minimizer.size(); j++) {
-				std::cout << minimizer[j].getNucleotide() << " ";
+				std::cout << minimizer[j].getValue() << " ";
 			}
 			std::cout << std::endl;
 		}

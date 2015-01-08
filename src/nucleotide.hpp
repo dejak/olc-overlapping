@@ -23,6 +23,7 @@ class Nucleotide
     Nucleotide(const NucleotideLetter nucleotide);
 
     char getNucleotide() const;
+    int getValue() const;
 };
 
 }
