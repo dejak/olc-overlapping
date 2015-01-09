@@ -10,13 +10,14 @@ namespace OLC
 
 class Minimizer
 {
-	private:
-		std::vector<Nucleotide> vector_;
-	public:
-		Minimizer(const std::vector<Nucleotide> vector);
-		void push_back(const Nucleotide &nucleotides);
-		Nucleotide operator[](unsigned int index) const;
-		int size() const;
+  private:
+    std::vector<Nucleotide> vector_;
+
+  public:
+    Minimizer(const std::vector<Nucleotide> &vector);
+    void push_back(const Nucleotide &nucleotides);
+    Nucleotide operator[](unsigned int index) const;
+    std::size_t size() const;
 
 };
 
