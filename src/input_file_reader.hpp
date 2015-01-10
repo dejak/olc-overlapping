@@ -14,7 +14,7 @@ class InputFileReader : public InputReader
     InputFileReader(const std::string& filename);
     ~InputFileReader();
 
-    std::vector<std::unique_ptr<OLC::Sequence>> readSequences();
+    std::vector<OLC::Sequence*> readSequences();
 
   private:
     std::ifstream in_;

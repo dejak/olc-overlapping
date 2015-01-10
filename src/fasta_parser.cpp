@@ -14,9 +14,9 @@ FASTAParser::~FASTAParser()
 
 }
 
-const std::vector<std::unique_ptr<OLC::Sequence>> FASTAParser::readSequences()
+const std::vector<OLC::Sequence*> FASTAParser::readSequences()
 {
-  std::vector<std::unique_ptr<Sequence>> sequences;
+  std::vector<OLC::Sequence*> sequences;
 
   if (FormatParser::in_.fail())
     return sequences;
@@ -49,7 +49,7 @@ const std::vector<std::unique_ptr<OLC::Sequence>> FASTAParser::readSequences()
       identifier = identifier.substr(0, delimiterIndex);
     }
 
-    std::unique_ptr<Nucleotides> nucleotides(new Nucleotides());
+    Nucleotides* nucleotides = new Nucleotides();
 
     char nextChar = FormatParser::in_.peek();
 
@@ -62,11 +62,11 @@ const std::vector<std::unique_ptr<OLC::Sequence>> FASTAParser::readSequences()
       {
         switch (c)
         {
-          case 'A': nucleotides.get()->push_back(NucleotideLetter::A); break;
-          case 'T': nucleotides.get()->push_back(NucleotideLetter::T); break;
-          case 'C': nucleotides.get()->push_back(NucleotideLetter::C); break;
-          case 'G': nucleotides.get()->push_back(NucleotideLetter::G); break;
-          case '-': nucleotides.get()->push_back(FormatParser::getRandomNucleotide()); break;
+          case 'A': nucleotides->push_back(NucleotideLetter::A); break;
+          case 'T': nucleotides->push_back(NucleotideLetter::T); break;
+          case 'C': nucleotides->push_back(NucleotideLetter::C); break;
+          case 'G': nucleotides->push_back(NucleotideLetter::G); break;
+          case '-': nucleotides->push_back(FormatParser::getRandomNucleotide()); break;
           default: break;
         }
       }
@@ -74,8 +74,8 @@ const std::vector<std::unique_ptr<OLC::Sequence>> FASTAParser::readSequences()
       nextChar = FormatParser::in_.peek();
     }
 
-    std::unique_ptr<Sequence> pointer(new Sequence(identifier, description, std::move(nucleotides)));
-    sequences.push_back(std::move(pointer));
+    Sequence *sequence = new Sequence(identifier, description, nucleotides);
+    sequences.push_back(sequence);
   }
 
   return sequences;

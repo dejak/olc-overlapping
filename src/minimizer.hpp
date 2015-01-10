@@ -22,6 +22,7 @@ class Minimizer
 };
 
 bool operator<(const Minimizer &first, const Minimizer &second);
+
 }
 
 

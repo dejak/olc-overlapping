@@ -16,9 +16,9 @@ FASTQParser::~FASTQParser()
 
 }
 
-const std::vector<std::unique_ptr<OLC::Sequence>> FASTQParser::readSequences()
+const std::vector<OLC::Sequence*> FASTQParser::readSequences()
 {
-  std::vector<std::unique_ptr<Sequence>> sequences;
+  std::vector<OLC::Sequence*> sequences;
 
   if (FormatParser::in_.fail())
     return sequences;
@@ -47,8 +47,8 @@ const std::vector<std::unique_ptr<OLC::Sequence>> FASTQParser::readSequences()
     }
 
     std::string sequence;
-    std::unique_ptr<Nucleotides> nucleotides(new Nucleotides());
-    nucleotides.get()->reserve(sequence.size());
+    Nucleotides* nucleotides = new Nucleotides();
+    nucleotides->reserve(sequence.size());
 
     std::getline(FormatParser::in_, sequence);
 
@@ -56,11 +56,11 @@ const std::vector<std::unique_ptr<OLC::Sequence>> FASTQParser::readSequences()
     {
       switch (c)
       {
-        case 'A': nucleotides.get()->push_back(NucleotideLetter::A); break;
-        case 'T': nucleotides.get()->push_back(NucleotideLetter::T); break;
-        case 'C': nucleotides.get()->push_back(NucleotideLetter::C); break;
-        case 'G': nucleotides.get()->push_back(NucleotideLetter::G); break;
-        case '-': nucleotides.get()->push_back(FormatParser::getRandomNucleotide()); break;
+        case 'A': nucleotides->push_back(NucleotideLetter::A); break;
+        case 'T': nucleotides->push_back(NucleotideLetter::T); break;
+        case 'C': nucleotides->push_back(NucleotideLetter::C); break;
+        case 'G': nucleotides->push_back(NucleotideLetter::G); break;
+        case '-': nucleotides->push_back(FormatParser::getRandomNucleotide()); break;
         default: break;
       }
     }
@@ -79,8 +79,8 @@ const std::vector<std::unique_ptr<OLC::Sequence>> FASTQParser::readSequences()
 
     if (!identifier.empty() && !sequence.empty() && !plus.empty())
     {
-      std::unique_ptr<Sequence> pointer(new Sequence(identifier, description, std::move(nucleotides)));
-      sequences.push_back(std::move(pointer));
+      Sequence* sequence = new Sequence(identifier, description, nucleotides);
+      sequences.push_back(sequence);
     }
   }
 

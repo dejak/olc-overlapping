@@ -17,7 +17,7 @@ InputFileReader::~InputFileReader()
   in_.close();
 }
 
-std::vector<std::unique_ptr<OLC::Sequence>> InputFileReader::readSequences()
+std::vector<OLC::Sequence*> InputFileReader::readSequences()
 {
   const char firstCharacter = in_.peek();
 
@@ -25,16 +25,16 @@ std::vector<std::unique_ptr<OLC::Sequence>> InputFileReader::readSequences()
   {
     FASTAParser parser(in_);
     //return parser.readSequences();
-    return std::vector<std::unique_ptr<OLC::Sequence>>();
+    return std::vector<OLC::Sequence*>();
   }
   else if (firstCharacter == '@')
   {
     FASTQParser parser(in_);
     //return parser.readSequences();
-    return std::vector<std::unique_ptr<OLC::Sequence>>();
+    return std::vector<OLC::Sequence*>();
   }
   else
-    return std::vector<std::unique_ptr<OLC::Sequence>>();
+    return std::vector<OLC::Sequence*>();
 }
 
 }

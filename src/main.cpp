@@ -24,7 +24,7 @@ int main(int argc, char** argv)
   // read phase
 
   OLC::InputFileReader reader(file);
-  std::vector<std::unique_ptr<OLC::Sequence>> sequences = reader.readSequences();
+  std::vector<OLC::Sequence*> sequences = reader.readSequences();
 
   // calculate minimizers - both interior and end minimizers
   // TODO: Maknuti nakon testinga

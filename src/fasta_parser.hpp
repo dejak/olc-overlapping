@@ -14,7 +14,7 @@ class FASTAParser : protected FormatParser
     FASTAParser(std::ifstream& in);
     ~FASTAParser();
 
-    const std::vector<std::unique_ptr<OLC::Sequence>> readSequences();
+    const std::vector<OLC::Sequence*> readSequences();
 };
 
 }

@@ -9,7 +9,7 @@ namespace OLC
 class InputReader
 {
   public:
-    virtual std::vector<std::unique_ptr<OLC::Sequence>> readSequences() = 0;
+    virtual std::vector<OLC::Sequence*> readSequences() = 0;
 };
 
 }

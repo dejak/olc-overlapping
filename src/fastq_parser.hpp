@@ -14,7 +14,7 @@ class FASTQParser : protected FormatParser
     FASTQParser(std::ifstream& in);
     ~FASTQParser();
 
-    const std::vector<std::unique_ptr<OLC::Sequence>> readSequences() override;
+    const std::vector<OLC::Sequence*> readSequences() override;
 };
 
 }
