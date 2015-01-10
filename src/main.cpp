@@ -18,6 +18,9 @@ int main(int argc, char** argv)
   const uint32_t L = std::stoi(argv[1]);
   const std::string file = std::string(argv[2]);
 
+  const uint32_t w = (L + 1) / 2;
+  const uint32_t k = (L + 1) / 2;
+
   // read phase
 
   OLC::InputFileReader reader(file);
@@ -43,7 +46,7 @@ int main(int argc, char** argv)
   vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x01)));  
 
 
-  minimize(vec, 3, 3);
+  minimize(vec, w, k);
 
 
   // find overlaps
