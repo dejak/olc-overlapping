@@ -2,6 +2,7 @@
 
 #include "input_file_reader.hpp"
 #include "minimizator.hpp"
+#include "comparator.hpp"
 
 int main(int argc, char** argv)
 {
@@ -50,6 +51,35 @@ int main(int argc, char** argv)
 
 
   // find overlaps
+  std::vector<int> first;
+  first.push_back(3);
+  first.push_back(1);
+  first.push_back(1);
+  first.push_back(2);
+  first.push_back(4);
+  first.push_back(3);
+  std::vector<int> second;
+  second.push_back(4);
+  second.push_back(1);
+  second.push_back(2);
+  second.push_back(4);
+  second.push_back(2);
+  second.push_back(1);
+
+  std::vector<OLC::Position> overlapPath = OLC::compare(first, second);
+  int overlapFirstEnd = overlapPath[0].get(0);
+  int overlapSecondEnd = overlapPath[0].get(1);
+  int overlapFirstStart = overlapPath[overlapPath.size() - 1].get(0);
+  int overlapSecondStart = overlapPath[overlapPath.size() - 1].get(1);
+  std::cout << "Preklapanje duljine " << overlapPath.size() << std::endl;
+  for (int i  = overlapFirstStart; i <= overlapFirstEnd; i++) {
+    std::cout << first[i] << " ";
+  }
+  std::cout << std::endl;
+  for (int i = overlapSecondStart; i <= overlapSecondEnd; i++) {
+    std::cout << second[i] << " ";
+  }
+  std::cout << std::endl;
 
   return 0;
 }

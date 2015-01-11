@@ -15,7 +15,7 @@ class Position {
 		int get(int index) const;	
 };
 
-void compare(std::vector<int> first, std::vector<int> second);
+std::vector<Position> compare(std::vector<int> first, std::vector<int> second);
 
 }
 

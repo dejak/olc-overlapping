@@ -1,5 +1,7 @@
 #include "comparator.hpp"
 
+#include <iostream>
+
 namespace OLC
 {
 Position::Position(const int i, const int j) 
@@ -14,16 +16,20 @@ int Position::get(int index) const {
 	}
 }
 
-void compare(std::vector<int> first, std::vector<int> second) {
+std::vector<Position> compare(std::vector<int> first, std::vector<int> second) {
 	std::vector<std::vector<int>> values;
 	std::vector<std::vector<Position>> positions;
 
 	for (int i = 0; i < first.size() + 1; i++) {
 		std::vector<int> row;
+		std::vector<Position> positionRow;
 		for (int j = 0; j < second.size() + 1; j++) {
 			row.push_back(0);
+			Position pos(0, 0);
+			positionRow.push_back(pos);
 		}
 		values.push_back(row);
+		positions.push_back(positionRow);
 	}
 
 	int maxValue = 0;
@@ -38,7 +44,6 @@ void compare(std::vector<int> first, std::vector<int> second) {
 			if (first[i-1] == second[j-1]) {
 				diagonal += 3;
 			}
-
 			if (up > left && up > diagonal) {
 				values[i][j] = up;
 				Position prev(i-1, j);
@@ -56,9 +61,10 @@ void compare(std::vector<int> first, std::vector<int> second) {
 					maxPosition = prev;
 				}
 			} else {
+
 				values[i][j] = diagonal;
-				Position prev(i-1, j-1);
-				positions[i][j] = prev;
+				Position prev(i-1, j-1); 
+				positions[i][j] = prev; 
 				if (diagonal > maxValue) {
 					maxValue = diagonal;
 					maxPosition = prev;
@@ -66,6 +72,21 @@ void compare(std::vector<int> first, std::vector<int> second) {
 			}
 		}
 	}
+ 
+
+	std::vector<Position> path;
+
+	Position current = maxPosition;
+	while (true){
+		if (values[current.get(0)][current.get(1)] == 0) {
+			break;
+		}
+
+		path.push_back(current);
+		current = positions[current.get(0)][current.get(1)];
+	}
+
+	return path;
 
 }
 
