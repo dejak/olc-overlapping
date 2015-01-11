@@ -6,7 +6,7 @@
 
 namespace OLC
 {
-  std::vector<Minimizer> minimize(std::vector<Nucleotide> nucleotides, int w, int k);
+  std::vector<Minimizer> minimize(const std::vector<Nucleotide>& nucleotides, const int w, const int k);
 }
 
-#endif
+#endif // MINIMIZATOR_HPP_
