@@ -6,7 +6,7 @@
 namespace OLC
 {
 
-std::vector<Nucleotide> slice(const std::vector<Nucleotide>& vector, int start = 0, int end = -1)
+static std::vector<Nucleotide> slice(const std::vector<Nucleotide>& vector, int start = 0, int end = -1)
 {
   int oldlen = vector.size();
   int newlen;
@@ -29,7 +29,7 @@ std::vector<Nucleotide> slice(const std::vector<Nucleotide>& vector, int start =
   return nv;
 }
 
-std::vector<Minimizer> findKMers(const std::vector<Nucleotide> &vector, const int k, const int offset)
+static std::vector<Minimizer> findKMers(const std::vector<Nucleotide> &vector, const int k, const int offset)
 {
   std::vector<Minimizer> kMers;
 
@@ -43,7 +43,7 @@ std::vector<Minimizer> findKMers(const std::vector<Nucleotide> &vector, const in
   return kMers;
 }
 
-std::vector<Minimizer> findInnerMinimizers(const std::vector<Nucleotide> &vector, const int w, const int k)
+static std::vector<Minimizer> findInnerMinimizers(const std::vector<Nucleotide> &vector, const int w, const int k)
 {
   std::vector<Minimizer> minimizers;
 
@@ -59,7 +59,7 @@ std::vector<Minimizer> findInnerMinimizers(const std::vector<Nucleotide> &vector
   return minimizers;
 }
 
-std::vector<Minimizer> findOuterMinimizers(const std::vector<Nucleotide> &vector, const int k)
+static std::vector<Minimizer> findOuterMinimizers(const std::vector<Nucleotide> &vector, const int k)
 {
   std::vector<Minimizer> minimizers;
 
@@ -79,6 +79,16 @@ std::vector<Minimizer> minimize(const std::vector<Nucleotide>& nucleotideVector,
 
   minimizers.insert(minimizers.end(), innerMinimizers.begin(), innerMinimizers.end());
   minimizers.insert(minimizers.end(), outerMinimizers.begin(), outerMinimizers.end());
+
+  std::sort(minimizers.begin(), minimizers.end());
+
+  std::vector<Minimizer> uniqueMinimizers;
+
+  for (std::size_t i = 0; i < minimizers.size(); i++) {
+    if (!std::binary_search(uniqueMinimizers.begin(), uniqueMinimizers.end(), minimizers[i])) {
+      uniqueMinimizers.push_back(minimizers[i]);
+    }
+  }
 
   return minimizers;
 }

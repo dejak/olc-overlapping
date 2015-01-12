@@ -19,6 +19,7 @@ class Minimizer
     void push_back(const Nucleotide &nucleotides);
     Nucleotide operator[](unsigned int index) const;
     std::size_t size() const;
+    int getPosition() const;
 
     bool operator==(const Minimizer &other) const;
 
