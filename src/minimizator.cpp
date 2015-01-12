@@ -29,13 +29,13 @@ std::vector<Nucleotide> slice(const std::vector<Nucleotide>& vector, int start =
   return nv;
 }
 
-std::vector<Minimizer> findKMers(const std::vector<Nucleotide> &vector, const int k)
+std::vector<Minimizer> findKMers(const std::vector<Nucleotide> &vector, const int k, const int offset)
 {
   std::vector<Minimizer> kMers;
 
   for (std::size_t i = 0; i < vector.size() - k + 1; ++i)
   {
-    kMers.push_back(Minimizer(slice(vector, i, i+k)));
+    kMers.push_back(Minimizer(slice(vector, i, i+k), i + offset));
   }
 
   //TODO: Sortiraj ovo
@@ -50,7 +50,7 @@ std::vector<Minimizer> findInnerMinimizers(const std::vector<Nucleotide> &vector
   for (std::size_t i = 0; i < vector.size() - w - k + 2; ++i)
   {
     const std::vector<Nucleotide> window = slice(vector, i, i + w + k - 1);
-    const std::vector<Minimizer> kMers = findKMers(window, k);
+    const std::vector<Minimizer> kMers = findKMers(window, k, i);
     const Minimizer minimizer = kMers[0];
     //TODO: Samo ako vec ne postoji
     minimizers.push_back(minimizer);
@@ -63,8 +63,8 @@ std::vector<Minimizer> findOuterMinimizers(const std::vector<Nucleotide> &vector
 {
   std::vector<Minimizer> minimizers;
 
-  minimizers.push_back(Minimizer(slice(vector, 0, k)));
-  minimizers.push_back(Minimizer(slice(vector, vector.size() - k, vector.size())));
+  minimizers.push_back(Minimizer(slice(vector, 0, k), 0));
+  minimizers.push_back(Minimizer(slice(vector, vector.size() - k, vector.size()), vector.size() - k));
 
   return minimizers;
 }

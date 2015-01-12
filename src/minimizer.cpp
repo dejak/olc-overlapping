@@ -3,8 +3,8 @@
 namespace OLC
 {
 
-Minimizer::Minimizer(const std::vector<Nucleotide> &vector)
-  :vector_(vector)
+Minimizer::Minimizer(const std::vector<Nucleotide> &vector, const int position)
+  :vector_(vector), position_(position)
 {
 
 }
