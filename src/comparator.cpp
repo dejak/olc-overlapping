@@ -20,10 +20,10 @@ std::vector<Position> compare(std::vector<int> first, std::vector<int> second) {
 	std::vector<std::vector<int>> values;
 	std::vector<std::vector<Position>> positions;
 
-	for (int i = 0; i < first.size() + 1; i++) {
+	for (std::size_t i = 0; i < first.size() + 1; i++) {
 		std::vector<int> row;
 		std::vector<Position> positionRow;
-		for (int j = 0; j < second.size() + 1; j++) {
+		for (std::size_t j = 0; j < second.size() + 1; j++) {
 			row.push_back(0);
 			Position pos(0, 0);
 			positionRow.push_back(pos);
@@ -35,8 +35,8 @@ std::vector<Position> compare(std::vector<int> first, std::vector<int> second) {
 	int maxValue = 0;
 	Position maxPosition(0, 0);
 
-	for (int i = 1; i < first.size() + 1; i++) {
-		for (int j = 1; j < first.size() + 1; j++) {
+	for (std::size_t  i = 1; i < first.size() + 1; i++) {
+		for (std::size_t  j = 1; j < first.size() + 1; j++) {
 			int up = values[i-1][j] - 4;
 			int left = values[i][j-1] - 4;
 			int diagonal = values[i-1][j-1] - 1;
