@@ -20,6 +20,8 @@ class Minimizer
     Nucleotide operator[](unsigned int index) const;
     std::size_t size() const;
 
+    bool operator==(const Minimizer &other) const;
+
 };
 
 bool operator<(const Minimizer &first, const Minimizer &second);

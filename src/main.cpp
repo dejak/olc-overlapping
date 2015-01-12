@@ -44,22 +44,6 @@ int main(int argc, char** argv)
 
   // calculate minimizers - both interior and end minimizers
   // TODO: Maknuti nakon testinga
-  std::vector<OLC::Nucleotide> vec;
-  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x02)));
-  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x03)));
-  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x01)));
-  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x00)));
-  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x03)));
-  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x02)));
-  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x01)));
-  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x00)));
-  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x01))); 
-  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x02)));
-  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x03))); 
-  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x03)));
-  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x01)));
-  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x00)));
-  vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x01)));  
 
   // find overlaps
 

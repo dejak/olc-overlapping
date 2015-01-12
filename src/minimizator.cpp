@@ -77,7 +77,7 @@ std::vector<Minimizer> minimize(const std::vector<Nucleotide>& nucleotideVector,
   const std::vector<Minimizer> innerMinimizers = findInnerMinimizers(nucleotideVector, w, k);
   const std::vector<Minimizer> outerMinimizers = findOuterMinimizers(nucleotideVector, k);
 
-  minimizers.insert(minimizers.end(), outerMinimizers.begin(), outerMinimizers.end());
+  minimizers.insert(minimizers.end(), innerMinimizers.begin(), innerMinimizers.end());
   minimizers.insert(minimizers.end(), outerMinimizers.begin(), outerMinimizers.end());
 
   return minimizers;
