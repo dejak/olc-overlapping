@@ -13,7 +13,8 @@ Sequence::Sequence(const std::string& identifier, const std::string& description
 
 Sequence::~Sequence()
 {
-
+  if (nucleotides_ != nullptr)
+    delete nucleotides_;
 }
 
 }
