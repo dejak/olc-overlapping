@@ -98,6 +98,7 @@ const std::vector<OLC::Sequence*> FASTAParser::readSequences()
         }
 
         nextChar = FormatParser::in_.peek();
+        sequence = "";
       }
 
       Sequence *fasta_sequence = new Sequence(identifier, description, nucleotides);

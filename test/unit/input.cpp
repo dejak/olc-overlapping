@@ -163,3 +163,35 @@ TEST_CASE("reader can read a different valid fasta file", "[fasta]")
     }
   }
 }
+
+TEST_CASE("reader can read a multiline fasta sequence", "[fasta]")
+{
+  OLC::InputFileReader reader("../data/big.fasta");
+  const auto sequences = reader.readSequences();
+
+  SECTION("read valid data")
+  {
+    REQUIRE(sequences.size() == 3);
+  }
+
+  SECTION("test multiline sequence 1")
+  {
+    const auto sequence = sequences.at(0);
+
+    REQUIRE(sequence->getNucleotides()->toString() == "AAAATTTTCGGGTAAAATTTTCGGGTAAAATTTTCGGGT");
+  }
+
+  SECTION("test single line sequence 2")
+  {
+    const auto sequence = sequences.at(1);
+
+    REQUIRE(sequence->getNucleotides()->toString() == "ATCG");
+  }
+
+  SECTION("test multiline sequence 3")
+  {
+    const auto sequence = sequences.at(2);
+
+    REQUIRE(sequence->getNucleotides()->toString() == "AAAATTTTCGGGGAAAATTTTCGGGGAAAATTTTCGGGG");
+  }
+}
