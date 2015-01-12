@@ -10,22 +10,37 @@ int main(int argc, char** argv)
 
   if (argc != 3)
   {
-    std::cout << "Usage " << argv[0] << " <minimum overlap length L> <FASTQ or FASTA file>\n";
+    std::cout << "Usage: " << argv[0] << " <minimum overlap length L> <FASTQ or FASTA file>\n";
     return 1;
   }
 
-  // L = w + k -1 with w <= k
+  // file with the data
 
-  const uint32_t L = std::stoi(argv[1]);
   const std::string file = std::string(argv[2]);
 
+  // L is the minimum overlap length
+
+  const uint32_t L = std::stoi(argv[1]);
+
+  // window size
+
   const uint32_t w = (L + 1) / 2;
+
+  // size of the k-mer
+
   const uint32_t k = (L + 1) / 2;
 
   // read phase
 
   OLC::InputFileReader reader(file);
   std::vector<OLC::Sequence*> sequences = reader.readSequences();
+
+  for (size_t i = 0; i < sequences.size(); ++i)
+  {
+    auto vec = sequences[i]->getNucleotides()->getSequence();
+
+    auto minimizers = minimize(vec, w, k);
+  }
 
   // calculate minimizers - both interior and end minimizers
   // TODO: Maknuti nakon testinga
@@ -46,11 +61,8 @@ int main(int argc, char** argv)
   vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x00)));
   vec.push_back(OLC::Nucleotide(OLC::NucleotideLetter(0x01)));  
 
-
-  minimize(vec, w, k);
-
-
   // find overlaps
+
   std::vector<int> first;
   first.push_back(3);
   first.push_back(1);
@@ -80,6 +92,13 @@ int main(int argc, char** argv)
     std::cout << second[i] << " ";
   }
   std::cout << std::endl;
+
+  // cleanup
+
+  for (size_t i = 0; i < sequences.size(); ++i)
+  {
+    delete sequences[i];
+  }
 
   return 0;
 }

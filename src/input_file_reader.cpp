@@ -24,14 +24,12 @@ std::vector<OLC::Sequence*> InputFileReader::readSequences()
   if (firstCharacter == '>' || firstCharacter == ';')
   {
     FASTAParser parser(in_);
-    //return parser.readSequences();
-    return std::vector<OLC::Sequence*>();
+    return parser.readSequences();
   }
   else if (firstCharacter == '@')
   {
     FASTQParser parser(in_);
-    //return parser.readSequences();
-    return std::vector<OLC::Sequence*>();
+    return parser.readSequences();
   }
   else
     return std::vector<OLC::Sequence*>();

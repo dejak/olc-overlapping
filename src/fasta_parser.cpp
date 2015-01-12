@@ -1,5 +1,8 @@
 #include "fasta_parser.hpp"
 
+#include <iostream>
+#include <limits>
+
 namespace OLC
 {
 
@@ -23,59 +26,83 @@ const std::vector<OLC::Sequence*> FASTAParser::readSequences()
 
   while (!FormatParser::in_.eof())
   {
-    std::string identifier;
-    std::getline(FormatParser::in_, identifier);
-
-    // comment line, ignore
-
-    if (identifier.at(0) == ';')
-      continue;
-
-    // invalid line, try to start over
-
-    if (identifier.empty() || (identifier.at(0) != '>'))
-      continue;
-
-    // cut the initial '>' off
-
-    identifier = identifier.substr(1);
-
-    std::string description;
-    const std::size_t delimiterIndex = identifier.find('|');
-
-    if (delimiterIndex != std::string::npos)
-    {
-      description = identifier.substr(delimiterIndex + 1);
-      identifier = identifier.substr(0, delimiterIndex);
-    }
-
-    Nucleotides* nucleotides = new Nucleotides();
-
     char nextChar = FormatParser::in_.peek();
 
-    while (nextChar != '>')
+    if (nextChar == ';')
     {
-      std::string sequence;
-      std::getline(FormatParser::in_, sequence);
+      // comment line, ignore
 
-      for (const auto c : sequence)
+      FormatParser::in_.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+      continue;
+    }
+    else
+    {
+      std::string line;
+      std::getline(FormatParser::in_, line);
+
+      if (line.size() == 0)
+        continue;
+
+      std::string description;
+      std::string identifier;
+      std::string sequence;
+
+      if (line.at(0) == '>')
       {
-        switch (c)
+        // cut the initial '>' off
+
+        line = line.substr(1);
+
+        const std::size_t delimiterIndex = line.find('|');
+
+        if (delimiterIndex != std::string::npos)
         {
-          case 'A': nucleotides->push_back(NucleotideLetter::A); break;
-          case 'T': nucleotides->push_back(NucleotideLetter::T); break;
-          case 'C': nucleotides->push_back(NucleotideLetter::C); break;
-          case 'G': nucleotides->push_back(NucleotideLetter::G); break;
-          case '-': nucleotides->push_back(FormatParser::getRandomNucleotide()); break;
-          default: break;
+          description = line.substr(delimiterIndex + 1);
+          identifier = line.substr(0, delimiterIndex);
         }
       }
+      else
+      {
+        sequence = line;
+      }
 
-      nextChar = FormatParser::in_.peek();
+      Nucleotides* nucleotides = new Nucleotides();
+
+      if (sequence.empty())
+        nextChar = FormatParser::in_.peek();
+      else
+        nextChar = 'A';
+
+      while (nextChar != '>' && !FormatParser::in_.eof())
+      {
+        if (sequence.empty())
+          std::getline(FormatParser::in_, sequence);
+
+        if (sequence.size() == 0)
+        {
+          nextChar = FormatParser::in_.peek();
+          continue;
+        }
+
+        for (const auto c : sequence)
+        {
+          switch (c)
+          {
+            case 'A': nucleotides->push_back(NucleotideLetter::A); break;
+            case 'T': nucleotides->push_back(NucleotideLetter::T); break;
+            case 'C': nucleotides->push_back(NucleotideLetter::C); break;
+            case 'G': nucleotides->push_back(NucleotideLetter::G); break;
+            case '-': nucleotides->push_back(FormatParser::getRandomNucleotide()); break;
+            default: break;
+          }
+        }
+
+        nextChar = FormatParser::in_.peek();
+      }
+
+      Sequence *fasta_sequence = new Sequence(identifier, description, nucleotides);
+      sequences.push_back(fasta_sequence);
     }
-
-    Sequence *sequence = new Sequence(identifier, description, nucleotides);
-    sequences.push_back(sequence);
   }
 
   return sequences;
