@@ -2,6 +2,7 @@
 #define MINIMIZER_HPP_
 
 #include <vector>
+#include <string>
 
 #include "nucleotide.hpp"
 
@@ -22,7 +23,7 @@ class Minimizer
     int getPosition() const;
 
     bool operator==(const Minimizer &other) const;
-
+    std::string toString() const;
 };
 
 bool operator<(const Minimizer &first, const Minimizer &second);

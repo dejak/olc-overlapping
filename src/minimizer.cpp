@@ -54,4 +54,16 @@ std::size_t Minimizer::size() const
   return vector_.size();
 }
 
+std::string Minimizer::toString() const
+{
+  std::string output;
+
+  for (std::size_t i = 0; i < size(); ++i)
+  {
+    output += std::to_string(vector_[i].getValue()) + " ";
+  }
+
+  return output;
+}
+
 }
