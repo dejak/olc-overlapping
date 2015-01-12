@@ -90,7 +90,7 @@ std::vector<Minimizer> minimize(const std::vector<Nucleotide>& nucleotideVector,
     }
   }
 
-  return minimizers;
+  return uniqueMinimizers;
 }
 
 }
