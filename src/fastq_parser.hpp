@@ -8,6 +8,7 @@
 namespace OLC
 {
 
+// Implementation of FormatParser for the FASTQ format
 class FASTQParser : protected FormatParser
 {
   public:

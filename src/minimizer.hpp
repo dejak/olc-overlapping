@@ -9,6 +9,9 @@
 namespace OLC
 {
 
+// Class representing the minimizer of a vector of nucleotides of a given length, while also storing the position of the
+// start of the minimizer in the original vector. Operations on the minimizer are the same as if working with a vector of
+// nucleotides
 class Minimizer
 {
   private:

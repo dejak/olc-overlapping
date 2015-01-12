@@ -8,6 +8,7 @@
 namespace OLC
 {
 
+// Implementation of FormatParser for the FASTA format
 class FASTAParser : protected FormatParser
 {
   public:

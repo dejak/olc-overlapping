@@ -9,6 +9,7 @@
 namespace OLC
 {
 
+// Wrapper class for a vector of Nucleotide objects to enable moving and disable copying. 
 class Nucleotides
 {
   private:

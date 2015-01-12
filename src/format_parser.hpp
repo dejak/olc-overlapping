@@ -10,6 +10,7 @@
 namespace OLC
 {
 
+// Interface enabling parsing of both FASTA and FASTQ formats for program inputs
 class FormatParser
 {
   public:
@@ -21,6 +22,8 @@ class FormatParser
 
     FormatParser(std::ifstream& in);
 
+    // Used for replacing gaps in error prone reads with random nucleotides as 
+    // overlap algorithms should still be able to handle it.
     NucleotideLetter getRandomNucleotide() const;
 };
 
