@@ -92,7 +92,6 @@ TEST_CASE("reader can read a valid fasta file", "[fasta]")
     REQUIRE(sequences.size() == 3);
   }
 
-
   SECTION("first sequence is correct")
   {
     const auto sequence = sequences.at(0);
@@ -124,3 +123,43 @@ TEST_CASE("reader can read a valid fasta file", "[fasta]")
   }
 }
 
+TEST_CASE("reader can read a different valid fasta file", "[fasta]")
+{
+  OLC::InputFileReader reader("../data/valid2.fasta");
+  const auto sequences = reader.readSequences();
+
+  SECTION("read valid data")
+  {
+    REQUIRE(sequences.size() == 3);
+  }
+
+  SECTION("first sequence is correct")
+  {
+    const auto sequence = sequences.at(0);
+
+    REQUIRE(sequence->getNucleotides()->toString() == "AAAATTTTCGGGT");
+  }
+
+  SECTION("second sequence is correct")
+  {
+    const auto sequence = sequences.at(1);
+
+    REQUIRE(sequence->getNucleotides()->toString() == "AAAATTTTCGGGC");
+  }
+
+  SECTION("third sequence is random")
+  {
+    const auto sequence = sequences.at(2);
+    const auto nucleotideSequence = sequence->getNucleotides()->getSequence();
+
+    REQUIRE(sequence->getDescription() == "");
+
+    for (const auto nucleotide : nucleotideSequence)
+    {
+      // our reader should replace unknown reads aka dashes with
+      // random nucleotides
+
+      REQUIRE(nucleotide.getNucleotide() != '-');
+    }
+  }
+}

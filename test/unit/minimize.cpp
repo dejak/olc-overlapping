@@ -33,12 +33,12 @@ TEST_CASE("minimize", "[minimize")
 
   SECTION("test minimizer values")
   {
-    const OLC::Minimizer minimizer1(std::vector<OLC::Nucleotide>{OLC::NucleotideLetter(0x01), OLC::NucleotideLetter(0x00), OLC::NucleotideLetter(0x03)});
-    const OLC::Minimizer minimizer2(std::vector<OLC::Nucleotide>{OLC::NucleotideLetter(0x00), OLC::NucleotideLetter(0x03), OLC::NucleotideLetter(0x02)});
-    const OLC::Minimizer minimizer3(std::vector<OLC::Nucleotide>{OLC::NucleotideLetter(0x00), OLC::NucleotideLetter(0x03), OLC::NucleotideLetter(0x02)});
-    const OLC::Minimizer minimizer4(std::vector<OLC::Nucleotide>{OLC::NucleotideLetter(0x00), OLC::NucleotideLetter(0x03), OLC::NucleotideLetter(0x02)});
-    const OLC::Minimizer minimizer5(std::vector<OLC::Nucleotide>{OLC::NucleotideLetter(0x01), OLC::NucleotideLetter(0x00), OLC::NucleotideLetter(0x01)});
-    const OLC::Minimizer minimizer6(std::vector<OLC::Nucleotide>{OLC::NucleotideLetter(0x00), OLC::NucleotideLetter(0x01), OLC::NucleotideLetter(0x02)});
+    const OLC::Minimizer minimizer1(std::vector<OLC::Nucleotide>{OLC::NucleotideLetter(0x01), OLC::NucleotideLetter(0x00), OLC::NucleotideLetter(0x03)}, 0);
+    const OLC::Minimizer minimizer2(std::vector<OLC::Nucleotide>{OLC::NucleotideLetter(0x00), OLC::NucleotideLetter(0x03), OLC::NucleotideLetter(0x02)}, 0);
+    const OLC::Minimizer minimizer3(std::vector<OLC::Nucleotide>{OLC::NucleotideLetter(0x00), OLC::NucleotideLetter(0x03), OLC::NucleotideLetter(0x02)}, 0);
+    const OLC::Minimizer minimizer4(std::vector<OLC::Nucleotide>{OLC::NucleotideLetter(0x00), OLC::NucleotideLetter(0x03), OLC::NucleotideLetter(0x02)}, 0);
+    const OLC::Minimizer minimizer5(std::vector<OLC::Nucleotide>{OLC::NucleotideLetter(0x01), OLC::NucleotideLetter(0x00), OLC::NucleotideLetter(0x01)}, 0);
+    const OLC::Minimizer minimizer6(std::vector<OLC::Nucleotide>{OLC::NucleotideLetter(0x00), OLC::NucleotideLetter(0x01), OLC::NucleotideLetter(0x02)}, 0);
 
     REQUIRE(minimizers.at(0) == minimizer1);
     REQUIRE(minimizers.at(1) == minimizer2);
