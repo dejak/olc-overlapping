@@ -21,7 +21,28 @@ static std::queue<std::tuple<std::vector<OLC::Minimizer>*, std::vector<OLC::Mini
 
 static void worker()
 {
-  std::tuple<uint32_t, uint32_t> task = g_tasks.front();
+
+  g_tasks_mutex.lock();
+
+  std::tuple<OLC::Sequence*, OLC::Sequence*> sequence_pair = g_sequence_pairs.front();
+  g_sequence_pairs.pop();
+  std::tuple<std::vector<OLC::Minimizer>*, std::vector<OLC::Minimizer>*> minimizer_pair = g_minimizer_pairs.front();
+  g_minimizer_pairs.pop();
+  
+  g_tasks_mutex.unlock();
+
+  OLC::Sequence* sequence1 = std::get<0>(sequence_pair);
+  OLC::Sequence* sequence2 = std::get<1>(sequence_pair);
+
+  std::vector<OLC::Nucleotide> nucleotides1 = sequence1 -> getNucleotides() -> getSequence();
+  std::vector<OLC::Nucleotide> nucleotides2 = sequence2 -> getNucleotides() -> getSequence();
+
+  if ( nucleotides1.size() < 20000 && nucleotides2.size() < 20000) {
+    OLC::Overlap overlap = compare(nucleotides1, nucleotides2);
+  } else {
+
+  }
+
 
   return;
 }
