@@ -3,14 +3,18 @@
 #include <queue>
 #include <thread>
 #include <tuple>
+#include <condition_variable>
 
 #include "input_file_reader.hpp"
 #include "minimize.hpp"
 #include "comparator.hpp"
 #include "result.hpp"
 
-// mutex that locks the resources that are shared
+// mutex for shared resources
 static std::mutex g_tasks_mutex;
+
+// conditonal variable for shared resources
+static std::condition_variable g_cv;
 
 // global queue with two pointers to the sequences
 // they are compared directly if the both sequence lengths are small enough
@@ -22,7 +26,6 @@ static std::queue<std::tuple<std::vector<OLC::Minimizer>*, std::vector<OLC::Mini
 
 static void worker()
 {
-
   // Get the task and remove it from the pool
   g_tasks_mutex.lock();
 
@@ -34,41 +37,40 @@ static void worker()
   g_tasks_mutex.unlock();
 
   // Get the task sequences
-  OLC::Sequence* sequence1 = std::get<0>(sequence_pair);
-  OLC::Sequence* sequence2 = std::get<1>(sequence_pair);
+  const OLC::Sequence* sequence1 = std::get<0>(sequence_pair);
+  const OLC::Sequence* sequence2 = std::get<1>(sequence_pair);
 
   // Pull out the wrapped nucleotide vectors
-  const std::vector<OLC::Nucleotide> nucleotides1 = sequence1 -> getNucleotides() -> getSequence();
-  const std::vector<OLC::Nucleotide> nucleotides2 = sequence2 -> getNucleotides() -> getSequence();
+  const std::vector<OLC::Nucleotide> nucleotides1 = sequence1->getNucleotides()->getSequence();
+  const std::vector<OLC::Nucleotide> nucleotides2 = sequence2->getNucleotides()->getSequence();
 
   // If small enough, no need to use minimizers
-  if ( nucleotides1.size() < 20000 && nucleotides2.size() < 20000) {
+  if (nucleotides1.size() < 20000 && nucleotides2.size() < 20000)
+  {
     const OLC::Overlap overlap = compare(nucleotides1, nucleotides2);
     const uint32_t overlapFirstEnd = overlap.getEndFirst();
     const uint32_t overlapSecondEnd = overlap.getEndSecond();
     const uint32_t overlapFirstStart = overlap.getStartFirst();
     const uint32_t overlapSecondStart = overlap.getStartSecond();
-    
-    const int overlapLength = overlapFirstEnd - overlapFirstStart + 1;
+    const uint32_t overlapLength = overlapFirstEnd - overlapFirstStart + 1;
 
-    const std::string sequence1_ident = sequence1 -> getIdentifier();
-    const std::string sequence2_ident = sequence2 -> getIdentifier();
+    const std::string sequence1_ident = sequence1->getIdentifier();
+    const std::string sequence2_ident = sequence2->getIdentifier();
 
-    int ahang = overlapFirstStart;
-    int bhang = nucleotides2.size() - overlapSecondEnd;
+    int32_t ahang = overlapFirstStart;
+    int32_t bhang = nucleotides2.size() - overlapSecondEnd;
 
-    if (overlapSecondStart > overlapFirstStart) {
+    if (overlapSecondStart > overlapFirstStart)
       ahang *= 1;
-    }
 
-    if (nucleotides1.size() > overlapSecondEnd) {
+    if (nucleotides1.size() > overlapSecondEnd)
       bhang *= 1;
-    }
 
     //TODO: Add into result queue
-    OLC::Result result(sequence1_ident, sequence2_ident, overlapLength, ahang, bhang);
-
-  } else {
+    const OLC::Result result(sequence1_ident, sequence2_ident, overlapLength, ahang, bhang);
+  }
+  else
+  {
 
   }
 
