@@ -1,8 +1,22 @@
 #include <iostream>
+#include <mutex>
+#include <queue>
+#include <thread>
+#include <tuple>
 
 #include "input_file_reader.hpp"
 #include "minimize.hpp"
 #include "comparator.hpp"
+
+static std::mutex g_tasks_mutex;
+static std::queue<std::tuple<uint32_t, uint32_t>> g_tasks;
+
+static void worker()
+{
+  const std::thread::id this_id = std::this_thread::get_id();
+
+  return;
+}
 
 int main(int argc, char** argv)
 {
@@ -32,44 +46,35 @@ int main(int argc, char** argv)
 
   for (size_t i = 0; i < sequences.size(); ++i)
   {
-    auto vec = sequences[i]->getNucleotides()->getSequence();
+    auto sequence = sequences[i]->getNucleotides()->getSequence();
 
     // calculate minimizers - both interior and end minimizers
-    auto minimizers = minimize(vec, w, k);
+    auto minimizers = minimize(sequence, w, k);
   }
 
-  // TODO: Maknuti nakon testinga
+  // generate basically tasks so we can do this in parallel if possible
+  std::queue<std::tuple<uint32_t, uint32_t>> tasks;
 
-  // find overlaps
-  std::vector<int> first;
-  first.push_back(3);
-  first.push_back(1);
-  first.push_back(1);
-  first.push_back(2);
-  first.push_back(4);
-  first.push_back(3);
-  std::vector<int> second;
-  second.push_back(4);
-  second.push_back(1);
-  second.push_back(2);
-  second.push_back(4);
-  second.push_back(2);
-  second.push_back(1);
+  for (uint32_t i = 0; i < sequences.size(); ++i)
+  {
+    for (uint32_t j = i + 1; j < sequences.size(); ++j)
+    {
+      std::cout << "job (" << i << "," << j << ")\n";
+      g_tasks.emplace(i, j);
+    }
+  }
 
-  std::vector<OLC::Position> overlapPath = OLC::compare(first, second);
-  int overlapFirstEnd = overlapPath[0].get(0);
-  int overlapSecondEnd = overlapPath[0].get(1);
-  int overlapFirstStart = overlapPath[overlapPath.size() - 1].get(0);
-  int overlapSecondStart = overlapPath[overlapPath.size() - 1].get(1);
-  std::cout << "Preklapanje duljine " << overlapPath.size() << std::endl;
-  for (int i  = overlapFirstStart; i <= overlapFirstEnd; i++) {
-    std::cout << first[i] << " ";
+  // use concurrent minimizer matching
+  std::vector<std::thread> threads(std::thread::hardware_concurrency());
+
+  for (uint8_t i = 0; i < threads.size(); ++i)
+  {
+    std::cout << "Thread [" << static_cast<int>(i + 1) << "] spawned\n";
+    threads[i] = std::thread(worker);
   }
-  std::cout << std::endl;
-  for (int i = overlapSecondStart; i <= overlapSecondEnd; i++) {
-    std::cout << second[i] << " ";
-  }
-  std::cout << std::endl;
+
+  for (uint8_t i = 0; i < threads.size(); ++i)
+    threads[i].join();
 
   // cleanup
   for (size_t i = 0; i < sequences.size(); ++i)
