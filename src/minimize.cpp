@@ -1,6 +1,5 @@
-#include "minimizator.hpp"
+#include "minimize.hpp"
 
-#include <iostream> 
 #include <algorithm>
 
 namespace OLC

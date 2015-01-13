@@ -1,7 +1,7 @@
 #include <iostream>
 
 #include "input_file_reader.hpp"
-#include "minimizator.hpp"
+#include "minimize.hpp"
 #include "comparator.hpp"
 
 int main(int argc, char** argv)
