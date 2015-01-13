@@ -60,11 +60,13 @@ static void worker()
     int32_t ahang = overlapFirstStart;
     int32_t bhang = nucleotides2.size() - overlapSecondEnd;
 
-    if (overlapSecondStart > overlapFirstStart)
-      ahang *= 1;
+    if (overlapSecondStart > overlapFirstStart) {
+      ahang *= -1;
+    }
 
-    if (nucleotides1.size() > overlapSecondEnd)
-      bhang *= 1;
+    if (nucleotides1.size() > overlapSecondEnd) {
+      bhang *= -1;
+    }
 
     //TODO: Add into result queue
     const OLC::Result result(sequence1_ident, sequence2_ident, overlapLength, ahang, bhang);
