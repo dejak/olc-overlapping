@@ -18,7 +18,7 @@ int Position::get(const int index) const
     return j_;
 }
 
-std::vector<Position> compare(const std::vector<int>& first, const std::vector<int>& second)
+Overlap compare(const std::vector<int>& first, const std::vector<int>& second)
 {
   std::vector<std::vector<int>> values;
   std::vector<std::vector<Position>> positions;
@@ -103,7 +103,8 @@ std::vector<Position> compare(const std::vector<int>& first, const std::vector<i
     current = positions[current.get(0)][current.get(1)];
   }
 
-  return path;
+  Overlap overlap(path[path.size()-1].get(0), path[0].get(0), path[path.size()-1].get(1), path[0].get(1));
+  return overlap;
 }
 
 }

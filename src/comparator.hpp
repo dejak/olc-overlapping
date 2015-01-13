@@ -2,6 +2,7 @@
 #define COMPARATOR_HPP_
 
 #include <vector>
+#include "overlap.hpp"
 
 namespace OLC
 {
@@ -22,7 +23,7 @@ class Position
 // Compares two vectors to find the longest possible overlap using the Smith-Waterman algorithm with a bit of a 
 // bigger price for insertions and removals to allow for more strict overlaps while maintaining the possibility
 // to handle large error reads.
-std::vector<Position> compare(const std::vector<int>& first, const std::vector<int>& second);
+Overlap compare(const std::vector<int>& first, const std::vector<int>& second);
 
 }
 
