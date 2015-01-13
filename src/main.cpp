@@ -21,6 +21,8 @@ static std::queue<std::tuple<std::vector<OLC::Minimizer>*, std::vector<OLC::Mini
 
 static void worker()
 {
+  std::tuple<uint32_t, uint32_t> task = g_tasks.front();
+
   return;
 }
 

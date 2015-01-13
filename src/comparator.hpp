@@ -3,6 +3,7 @@
 
 #include <vector>
 #include "overlap.hpp"
+#include "nucleotide.hpp"
 
 namespace OLC
 {
@@ -24,6 +25,8 @@ class Position
 // bigger price for insertions and removals to allow for more strict overlaps while maintaining the possibility
 // to handle large error reads.
 Overlap compare(const std::vector<int>& first, const std::vector<int>& second);
+
+Overlap compare(const std::vector<Nucleotide>& first, const std::vector<Nucleotide>& second);
 
 }
 
