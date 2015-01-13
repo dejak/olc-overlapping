@@ -15,23 +15,18 @@ int main(int argc, char** argv)
   }
 
   // file with the data
-
   const std::string file = std::string(argv[2]);
 
   // L is the minimum overlap length
-
   const uint32_t L = std::stoi(argv[1]);
 
   // window size
-
   const uint32_t w = (L + 1) / 2;
 
   // size of the k-mer
-
   const uint32_t k = (L + 1) / 2;
 
   // read phase
-
   OLC::InputFileReader reader(file);
   std::vector<OLC::Sequence*> sequences = reader.readSequences();
 
@@ -39,14 +34,13 @@ int main(int argc, char** argv)
   {
     auto vec = sequences[i]->getNucleotides()->getSequence();
 
+    // calculate minimizers - both interior and end minimizers
     auto minimizers = minimize(vec, w, k);
   }
 
-  // calculate minimizers - both interior and end minimizers
   // TODO: Maknuti nakon testinga
 
   // find overlaps
-
   std::vector<int> first;
   first.push_back(3);
   first.push_back(1);
@@ -78,11 +72,8 @@ int main(int argc, char** argv)
   std::cout << std::endl;
 
   // cleanup
-
   for (size_t i = 0; i < sequences.size(); ++i)
-  {
     delete sequences[i];
-  }
 
   return 0;
 }
