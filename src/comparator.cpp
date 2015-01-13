@@ -10,7 +10,7 @@ Position::Position(const int i, const int j)
 
 }
 
-int Position::get(int index) const
+int Position::get(const int index) const
 {
   if (index == 0)
     return i_;

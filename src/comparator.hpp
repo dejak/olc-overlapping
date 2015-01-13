@@ -16,7 +16,7 @@ class Position
 
   public:
     Position(const int i, const int j);
-    int get(int index) const;
+    int get(const int index) const;
 };
 
 // Compares two vectors to find the longest possible overlap using the Smith-Waterman algorithm with a bit of a 
