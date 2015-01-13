@@ -26,7 +26,8 @@ class Minimizer
     int getPosition() const;
 
     bool operator==(const Minimizer &other) const;
-    std::string toString() const;
+    std::string toValueString() const;
+    std::string toNucleotideString() const;
 };
 
 bool operator<(const Minimizer &first, const Minimizer &second);

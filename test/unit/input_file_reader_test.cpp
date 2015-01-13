@@ -3,7 +3,7 @@
 #include "catch.hpp"
 
 #include "input_file_reader.hpp"
-#include "minimizator.hpp"
+#include "minimize.hpp"
 
 TEST_CASE("reader can read nonexisting files", "[input]")
 {

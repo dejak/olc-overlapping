@@ -2,12 +2,12 @@
 
 #include "catch.hpp"
 
-#include "minimizator.hpp"
+#include "minimize.hpp"
 
 using namespace std;
 using namespace OLC;
 
-TEST_CASE("minimize", "[minimize")
+TEST_CASE("minimize", "[minimize]")
 {
   vector<Nucleotide> vec;
 

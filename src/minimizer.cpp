@@ -54,14 +54,22 @@ std::size_t Minimizer::size() const
   return vector_.size();
 }
 
-std::string Minimizer::toString() const
+std::string Minimizer::toValueString() const
 {
-  std::string output;
+  std::string output(size(), '\0');
 
   for (std::size_t i = 0; i < size(); ++i)
-  {
-    output += std::to_string(vector_[i].getValue()) + " ";
-  }
+    output[i] = static_cast<char>(vector_[i].getValue() + 48);
+
+  return output;
+}
+
+std::string Minimizer::toNucleotideString() const
+{
+  std::string output(size(), '\0');
+
+  for (std::size_t i = 0; i < size(); ++i)
+    output[i] = vector_[i].getNucleotide();
 
   return output;
 }
