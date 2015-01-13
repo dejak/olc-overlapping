@@ -17,7 +17,7 @@ endif
 
 CXXFLAGS += $(OFLAGS) $(DFLAGS) -I.
 
-OBJS = comparator.o main.o minimizer.o minimize.o nucleotide.o nucleotides.o fastq_parser.o fasta_parser.o afg.o sequence.o format_parser.o input_file_reader.o overlap.o
+OBJS = comparator.o main.o minimizer.o minimize.o nucleotide.o nucleotides.o fastq_parser.o fasta_parser.o afg.o sequence.o format_parser.o input_file_reader.o overlap.o result.o
 PROGS = olc-overlapping
 
 all: $(OBJS) $(PROGS)

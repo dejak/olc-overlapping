@@ -22,23 +22,32 @@ static std::queue<std::tuple<std::vector<OLC::Minimizer>*, std::vector<OLC::Mini
 static void worker()
 {
 
+  // Get the task and remove it from the pool
   g_tasks_mutex.lock();
 
-  std::tuple<OLC::Sequence*, OLC::Sequence*> sequence_pair = g_sequence_pairs.front();
+  const std::tuple<OLC::Sequence*, OLC::Sequence*> sequence_pair = g_sequence_pairs.front();
   g_sequence_pairs.pop();
-  std::tuple<std::vector<OLC::Minimizer>*, std::vector<OLC::Minimizer>*> minimizer_pair = g_minimizer_pairs.front();
+  const std::tuple<std::vector<OLC::Minimizer>*, std::vector<OLC::Minimizer>*> minimizer_pair = g_minimizer_pairs.front();
   g_minimizer_pairs.pop();
-  
+
   g_tasks_mutex.unlock();
 
+  // Get the task sequences
   OLC::Sequence* sequence1 = std::get<0>(sequence_pair);
   OLC::Sequence* sequence2 = std::get<1>(sequence_pair);
 
-  std::vector<OLC::Nucleotide> nucleotides1 = sequence1 -> getNucleotides() -> getSequence();
-  std::vector<OLC::Nucleotide> nucleotides2 = sequence2 -> getNucleotides() -> getSequence();
+  // Pull out the wrapped nucleotide vectors
+  const std::vector<OLC::Nucleotide> nucleotides1 = sequence1 -> getNucleotides() -> getSequence();
+  const std::vector<OLC::Nucleotide> nucleotides2 = sequence2 -> getNucleotides() -> getSequence();
 
+  // If small enough, no need to use minimizers
   if ( nucleotides1.size() < 20000 && nucleotides2.size() < 20000) {
-    OLC::Overlap overlap = compare(nucleotides1, nucleotides2);
+    const OLC::Overlap overlap = compare(nucleotides1, nucleotides2);
+    const uint32_t overlapFirstEnd = overlap.getEndFirst();
+    const uint32_t overlapSecondEnd = overlap.getEndSecond();
+    const uint32_t overlapFirstStart = overlap.getStartFirst();
+    const uint32_t overlapSecondStart = overlap.getStartSecond();
+    const int overlapLength = overlapFirstEnd - overlapFirstStart + 1;
   } else {
 
   }
