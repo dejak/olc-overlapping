@@ -47,7 +47,13 @@ static void worker()
     const uint32_t overlapSecondEnd = overlap.getEndSecond();
     const uint32_t overlapFirstStart = overlap.getStartFirst();
     const uint32_t overlapSecondStart = overlap.getStartSecond();
+    
     const int overlapLength = overlapFirstEnd - overlapFirstStart + 1;
+
+    const std::string sequence1_ident = sequence1 -> getIdentifier();
+    const std::string sequence2_ident = sequence2 -> getIdentifier();
+
+
   } else {
 
   }
