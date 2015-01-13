@@ -11,7 +11,9 @@ namespace OLC
 class Position
 {
   private:
-    int i_, j_;
+    int i_;
+    int j_;
+
   public:
     Position(const int i, const int j);
     int get(int index) const;

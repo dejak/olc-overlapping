@@ -31,8 +31,7 @@ std::vector<Position> compare(const std::vector<int>& first, const std::vector<i
     for (std::size_t j = 0; j < second.size() + 1; ++j)
     {
       row.push_back(0);
-      Position pos(0, 0);
-      positionRow.push_back(pos);
+      positionRow.push_back(Position(0, 0));
     }
 
     values.push_back(row);
@@ -46,9 +45,9 @@ std::vector<Position> compare(const std::vector<int>& first, const std::vector<i
   {
     for (std::size_t  j = 1; j < first.size() + 1; ++j)
     {
-      int up = values[i-1][j] - 4;
-      int left = values[i][j-1] - 4;
-      int diagonal = values[i-1][j-1] - 1;
+      const int up    = values[i-1][j] - 4;
+      const int left  = values[i][j-1] - 4;
+      int diagonal    = values[i-1][j-1] - 1;
 
       if (first[i-1] == second[j-1])
         diagonal += 3;
@@ -56,7 +55,7 @@ std::vector<Position> compare(const std::vector<int>& first, const std::vector<i
       if (up > left && up > diagonal)
       {
         values[i][j] = up;
-        Position prev(i-1, j);
+        Position prev(i - 1, j);
         positions[i][j] = prev;
 
         if (up > maxValue)
@@ -68,7 +67,7 @@ std::vector<Position> compare(const std::vector<int>& first, const std::vector<i
       else if (left > up && left > diagonal)
       {
         values[i][j] = left;
-        Position prev(i, j-1);
+        const Position prev(i, j - 1);
         positions[i][j] = prev;
 
         if (left > maxValue)
@@ -80,7 +79,7 @@ std::vector<Position> compare(const std::vector<int>& first, const std::vector<i
       else
       {
         values[i][j] = diagonal;
-        Position prev(i-1, j-1);
+        const Position prev(i - 1, j - 1);
         positions[i][j] = prev;
 
         if (diagonal > maxValue)
@@ -93,8 +92,8 @@ std::vector<Position> compare(const std::vector<int>& first, const std::vector<i
   }
 
   std::vector<Position> path;
-
   Position current = maxPosition;
+
   while (true)
   {
     if (values[current.get(0)][current.get(1)] == 0)
