@@ -35,7 +35,7 @@ std::string Nucleotides::toString() const
   return stringRepresentation;
 }
 
-std::vector<Nucleotide> Nucleotides::getSequence() const
+const std::vector<Nucleotide>& Nucleotides::getSequence() const
 {
   return sequence_;
 }

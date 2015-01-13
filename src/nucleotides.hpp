@@ -29,7 +29,7 @@ class Nucleotides
     Nucleotides(Nucleotides&& move);
     Nucleotides& operator=(Nucleotides&& move);
 
-    std::vector<Nucleotide> getSequence() const;
+    const std::vector<Nucleotide>& getSequence() const;
     std::string toString() const;
     void push_back(const Nucleotide& nucleotide);
     void reserve(const std::size_t size);
