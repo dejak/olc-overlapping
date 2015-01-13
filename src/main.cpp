@@ -7,6 +7,7 @@
 #include "input_file_reader.hpp"
 #include "minimize.hpp"
 #include "comparator.hpp"
+#include "result.hpp"
 
 // mutex that locks the resources that are shared
 static std::mutex g_tasks_mutex;
@@ -53,6 +54,19 @@ static void worker()
     const std::string sequence1_ident = sequence1 -> getIdentifier();
     const std::string sequence2_ident = sequence2 -> getIdentifier();
 
+    int ahang = overlapFirstStart;
+    int bhang = nucleotides2.size() - overlapSecondEnd;
+
+    if (overlapSecondStart > overlapFirstStart) {
+      ahang *= 1;
+    }
+
+    if (nucleotides1.size() > overlapSecondEnd) {
+      bhang *= 1;
+    }
+
+    //TODO: Add into result queue
+    OLC::Result result(sequence1_ident, sequence2_ident, overlapLength, ahang, bhang);
 
   } else {
 
