@@ -131,8 +131,8 @@ int main(int argc, char** argv)
   {
     for (uint32_t j = i + 1; j < sequences.size(); ++j)
     {
-      g_sequence_pairs.emplace(i, sequences[i], j, sequences[j]);
-      g_minimizer_pairs.emplace(i, &minimizers[i], j, &minimizers[j]);
+      g_sequence_pairs.emplace(i + 1, sequences[i], j + 1, sequences[j]);
+      g_minimizer_pairs.emplace(i + 1, &minimizers[i], j + 1, &minimizers[j]);
     }
   }
 
@@ -144,6 +144,13 @@ int main(int argc, char** argv)
 
   for (uint8_t i = 0; i < threads.size(); ++i)
     threads[i].join();
+
+  for (size_t i = 0; i < g_results.size(); ++i)
+  {
+    auto identifiers = g_results[i]->getIdentifiers();
+
+    std::cout << "Found overlap with length of " << g_results[i]->getLength() << " between " << std::get<0>(identifiers) << " and " << std::get<1>(identifiers) << "\n";
+  }
 
   // cleanup
   for (size_t i = 0; i < sequences.size(); ++i)
