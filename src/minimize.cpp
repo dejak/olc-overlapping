@@ -12,19 +12,13 @@ static std::vector<Nucleotide> slice(const std::vector<Nucleotide>& vector, int 
   int newlen;
 
   if (end == -1 || end >= oldlen)
-  {
     newlen = oldlen - start;
-  }
   else
-  {
     newlen = end - start;
-  }
 
   std::vector<Nucleotide> nv;
   for (int i = 0; i < newlen; ++i)
-  {
     nv.push_back(vector[start + i]);
-  }
 
   return nv;
 }
@@ -35,9 +29,7 @@ static std::vector<Minimizer> findKMers(const std::vector<Nucleotide> &vector, c
   std::vector<Minimizer> kMers;
 
   for (std::size_t i = 0; i < vector.size() - k + 1; ++i)
-  {
     kMers.push_back(Minimizer(slice(vector, i, i+k), i + offset));
-  }
 
   std::sort(kMers.begin(), kMers.end());
   return kMers;

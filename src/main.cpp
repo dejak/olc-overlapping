@@ -52,8 +52,8 @@ void worker()
 
       std::tie(first_read_number, first_sequence, second_read_number, second_sequence) = g_sequence_pairs.front();
       g_sequence_pairs.pop();
-      //std::tie(first_read_number, first_minimizer, second_read_number, second_minimizer) = g_minimizer_pairs.front();
-      //g_minimizer_pairs.pop();
+      std::tie(first_read_number, first_minimizer, second_read_number, second_minimizer) = g_minimizer_pairs.front();
+      g_minimizer_pairs.pop();
     }
 
     // Pull out the wrapped nucleotide vectors
