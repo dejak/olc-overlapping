@@ -16,12 +16,6 @@ static std::mutex g_resource_mutex;
 // mutex for result vector
 static std::mutex g_result_mutex;
 
-// conditonal variable for shared resources
-static std::condition_variable g_resource_cv;
-
-// conditonal variable for result vector
-static std::condition_variable g_result_cv;
-
 // global queue with two pointers to the sequences
 // they are compared directly if the both sequence lengths are small enough
 static std::queue<std::tuple<OLC::Sequence*, OLC::Sequence*>> g_sequence_pairs;
@@ -30,26 +24,28 @@ static std::queue<std::tuple<OLC::Sequence*, OLC::Sequence*>> g_sequence_pairs;
 // we use this instead if the sequences are too long
 static std::queue<std::tuple<std::vector<OLC::Minimizer>*, std::vector<OLC::Minimizer>*>> g_minimizer_pairs;
 
+// global vector with results
 static std::vector<OLC::Result> g_results;
 
-static void worker()
+void worker()
 {
   while(true)
   {
     // Get the task and remove it from the pool
-    std::unique_lock<std::mutex> resource_lock(g_resource_mutex);
-    g_resource_cv.wait(resource_lock);
+    std::tuple<OLC::Sequence*, OLC::Sequence*> sequence_pair;
+    std::tuple<std::vector<OLC::Minimizer>*, std::vector<OLC::Minimizer>*> minimizer_pair;
 
-    if (g_sequence_pairs.empty())
-      return;
+    {
+      std::lock_guard<std::mutex> resource_lock(g_resource_mutex);
 
-    const std::tuple<OLC::Sequence*, OLC::Sequence*> sequence_pair = g_sequence_pairs.front();
-    g_sequence_pairs.pop();
-    const std::tuple<std::vector<OLC::Minimizer>*, std::vector<OLC::Minimizer>*> minimizer_pair = g_minimizer_pairs.front();
-    g_minimizer_pairs.pop();
+      if (g_sequence_pairs.empty())
+        return;
 
-    resource_lock.unlock();
-    g_resource_cv.notify_one();
+      sequence_pair = g_sequence_pairs.front();
+      g_sequence_pairs.pop();
+      minimizer_pair = g_minimizer_pairs.front();
+      g_minimizer_pairs.pop();
+    }
 
     // Get the task sequences
     const OLC::Sequence* sequence1 = std::get<0>(sequence_pair);
@@ -83,13 +79,10 @@ static void worker()
 
       const OLC::Result result(sequence1_ident, sequence2_ident, overlapLength, ahang, bhang);
 
-      std::unique_lock<std::mutex> result_lock(g_result_mutex);
-      g_result_cv.wait(result_lock);
-
-      g_results.push_back(result);
-
-      result_lock.unlock();
-      g_result_cv.notify_one();
+      {
+        std::lock_guard<std::mutex> result_lock(g_result_mutex);
+        g_results.push_back(result);
+      }
     }
     else
     {
