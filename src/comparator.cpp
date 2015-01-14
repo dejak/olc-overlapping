@@ -11,12 +11,12 @@ using Position = std::tuple<uint32_t, uint32_t>;
 
 Overlap compare(const std::vector<Nucleotide>& first, const std::vector<Nucleotide>& second)
 {
-  std::vector<std::vector<int>> values;
+  std::vector<std::vector<int32_t>> values;
   std::vector<std::vector<Position>> positions;
 
   for (std::size_t i = 0; i < first.size() + 1; ++i)
   {
-    std::vector<int> row;
+    std::vector<int32_t> row;
     std::vector<Position> positionRow;
 
     for (std::size_t j = 0; j < second.size() + 1; ++j)
@@ -29,16 +29,16 @@ Overlap compare(const std::vector<Nucleotide>& first, const std::vector<Nucleoti
     positions.push_back(positionRow);
   }
 
-  int maxValue = 0;
+  int32_t maxValue = 0;
   Position maxPosition(0, 0);
 
   for (std::size_t  i = 1; i < first.size() + 1; ++i)
   {
     for (std::size_t  j = 1; j < second.size() + 1; ++j)
     {
-      const int up    = values[i-1][j] - 4;
-      const int left  = values[i][j-1] - 4;
-      int diagonal    = values[i-1][j-1] - 1;
+      const int32_t up    = values[i-1][j] - 4;
+      const int32_t left  = values[i][j-1] - 4;
+      int32_t diagonal    = values[i-1][j-1] - 1;
 
       if (first[i-1].getValue() == second[j-1].getValue())
         diagonal += 3;
@@ -46,7 +46,7 @@ Overlap compare(const std::vector<Nucleotide>& first, const std::vector<Nucleoti
       if (up > left && up > diagonal)
       {
         values[i][j] = up;
-        Position prev(i - 1, j);
+        const Position prev(i - 1, j);
         positions[i][j] = prev;
 
         if (up > maxValue)
