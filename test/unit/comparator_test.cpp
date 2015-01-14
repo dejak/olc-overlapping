@@ -14,18 +14,18 @@ TEST_CASE("comparator methods", "[comparator]")
   first.push_back(Nucleotide(NucleotideLetter(0x01)));
   first.push_back(Nucleotide(NucleotideLetter(0x01)));
   first.push_back(Nucleotide(NucleotideLetter(0x02)));
-  first.push_back(Nucleotide(NucleotideLetter(0x04)));
+  first.push_back(Nucleotide(NucleotideLetter(0x00)));
   first.push_back(Nucleotide(NucleotideLetter(0x03)));
 
   vector<Nucleotide> second;
-  second.push_back(Nucleotide(NucleotideLetter(0x04)));
+  second.push_back(Nucleotide(NucleotideLetter(0x00)));
   second.push_back(Nucleotide(NucleotideLetter(0x01)));
   second.push_back(Nucleotide(NucleotideLetter(0x02)));
-  second.push_back(Nucleotide(NucleotideLetter(0x04)));
+  second.push_back(Nucleotide(NucleotideLetter(0x00)));
   second.push_back(Nucleotide(NucleotideLetter(0x02)));
   second.push_back(Nucleotide(NucleotideLetter(0x01)));
 
-  const Overlap overlap = OLC::compare(first, second);
+  const Overlap overlap = compare(first, second);
   const uint32_t overlapFirstEnd = overlap.getEndFirst();
   const uint32_t overlapSecondEnd = overlap.getEndSecond();
   const uint32_t overlapFirstStart = overlap.getStartFirst();
@@ -41,10 +41,10 @@ TEST_CASE("comparator methods", "[comparator]")
   {
     REQUIRE(first[overlapFirstStart].getValue() == 1);
     REQUIRE(first[overlapFirstStart + 1].getValue() == 2);
-    //REQUIRE(first[overlapFirstStart + 2].getValue() == 4);
+    REQUIRE(first[overlapFirstStart + 2].getValue() == 0);
 
     REQUIRE(second[overlapSecondStart].getValue() == 1);
     REQUIRE(second[overlapSecondStart + 1].getValue() == 2);
-    //REQUIRE(second[overlapSecondStart + 2].getValue() == 4);
+    REQUIRE(second[overlapSecondStart + 2].getValue() == 0);
   }
 }
