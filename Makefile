@@ -1,14 +1,8 @@
 ARCH = $(shell uname -m)
 
-CXX = clang++
-
-ifndef CXX
-  CXX = g++
-endif
-
 CXXFLAGS = -std=c++11 -pipe -Wall -Wextra -fno-builtin
 DFLAGS =
-OFLAGS = -O3
+OFLAGS = -O3 -flto
 LFLAGS = -pthread -L. -L/usr/local/lib/
 
 ifeq ($(ARCH),x86_64)

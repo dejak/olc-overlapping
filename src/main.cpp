@@ -88,32 +88,41 @@ void worker()
     }
     else
     {
-      std::vector<OLC::Minimizer> allMinimizers; 
-      for (size_t i = 0; i < first_minimizer -> size(); i++) {
+      std::vector<OLC::Minimizer> allMinimizers;
+
+      for (size_t i = 0; i < first_minimizer->size(); ++i)
         allMinimizers.push_back((*first_minimizer)[i]);
-      }
+
       std::sort(allMinimizers.begin(), allMinimizers.end());
-      for (size_t i = 0; i < second_minimizer -> size(); i++) { 
-        if (!std::binary_search(allMinimizers.begin(), allMinimizers.end(), (*second_minimizer)[i])) {
+
+      for (size_t i = 0; i < second_minimizer->size(); ++i) 
+      {
+        if (!std::binary_search(allMinimizers.begin(), allMinimizers.end(), (*second_minimizer)[i]))
           allMinimizers.push_back((*second_minimizer)[i]);
-        }
       }
+
       std::sort(allMinimizers.begin(), allMinimizers.end());
 
       std::vector<int> codedSequence1;
-      for (size_t i = 0; i < first_minimizer -> size(); i++) {
+      codedSequence1.reserve(first_minimizer->size());
+
+      for (size_t i = 0; i < first_minimizer->size(); ++i)
+      {
         auto lower = std::lower_bound(allMinimizers.begin(), allMinimizers.end(), (*first_minimizer)[i]);
         int index = std::distance(allMinimizers.begin(), lower);
         codedSequence1.push_back(index);
       }
 
       std::vector<int> codedSequence2;
-      for (size_t i = 0; i < second_minimizer -> size(); i++) {
+      codedSequence2.reserve(second_minimizer->size());
+
+      for (size_t i = 0; i < second_minimizer->size(); ++i)
+      {
         auto lower = std::lower_bound(allMinimizers.begin(), allMinimizers.end(), (*second_minimizer)[i]);
         int index = std::distance(allMinimizers.begin(), lower);
         codedSequence2.push_back(index);
       }
- 
+
       const OLC::Overlap overlap = OLC::compare(codedSequence1, codedSequence2);
       const uint32_t overlapFirstEnd = (*first_minimizer)[overlap.getEndFirst()].getPosition() + (*first_minimizer)[overlap.getEndFirst()].size();
       const uint32_t overlapSecondEnd = (*second_minimizer)[overlap.getEndSecond()].getPosition() + (*second_minimizer)[overlap.getEndSecond()].size();
@@ -194,7 +203,12 @@ int main(int argc, char** argv)
   }
 
   // use concurrent minimizer matching
-  std::vector<std::thread> threads(std::thread::hardware_concurrency());
+  uint32_t num_threads = std::thread::hardware_concurrency();
+
+  if (num_threads > 3)
+    num_threads = 3;
+
+  std::vector<std::thread> threads(3);
 
   for (uint8_t i = 0; i < threads.size(); ++i)
     threads[i] = std::thread(worker);

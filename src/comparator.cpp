@@ -21,8 +21,8 @@ Overlap compare(const std::vector<Nucleotide>& first, const std::vector<Nucleoti
 
     for (std::size_t j = 0; j < second.size() + 1; ++j)
     {
-      row.push_back(0);
-      positionRow.push_back(Position(0, 0));
+      row.emplace_back(0);
+      positionRow.emplace_back(0, 0);
     }
 
     values.push_back(row);
@@ -110,7 +110,7 @@ Overlap compare(const std::vector<int32_t>& first, const std::vector<int32_t>& s
     for (std::size_t j = 0; j < second.size() + 1; ++j)
     {
       row.push_back(0);
-      positionRow.push_back(Position(0, 0));
+      positionRow.emplace_back(0, 0);
     }
 
     values.push_back(row);
@@ -124,9 +124,9 @@ Overlap compare(const std::vector<int32_t>& first, const std::vector<int32_t>& s
   {
     for (std::size_t  j = 1; j < second.size() + 1; ++j)
     {
-      const int32_t up    = values[i-1][j] - 4;
-      const int32_t left  = values[i][j-1] - 4;
-      int32_t diagonal    = values[i-1][j-1] - 1;
+      const int32_t up    = values[i-1][j] - 15;
+      const int32_t left  = values[i][j-1] - 15;
+      int32_t diagonal    = values[i-1][j-1] - 8;
 
       if (first[i-1] == second[j-1])
         diagonal += 3;
@@ -181,6 +181,9 @@ Overlap compare(const std::vector<int32_t>& first, const std::vector<int32_t>& s
     path.push_back(current);
     current = positions[std::get<0>(current)][std::get<1>(current)];
   }
+
+  if (path.size() == 0)
+    return Overlap(0, 0, 0, 0);
 
   return Overlap(std::get<0>(path[path.size()-1]), std::get<0>(path[0]), std::get<1>(path[path.size()-1]), std::get<1>(path[0]));
 }
