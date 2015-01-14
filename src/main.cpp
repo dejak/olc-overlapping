@@ -18,22 +18,27 @@ static std::mutex g_result_mutex;
 
 // global queue with two pointers to the sequences
 // they are compared directly if the both sequence lengths are small enough
-static std::queue<std::tuple<OLC::Sequence*, OLC::Sequence*>> g_sequence_pairs;
+static std::queue<std::tuple<uint32_t, OLC::Sequence*, uint32_t, OLC::Sequence*>> g_sequence_pairs;
 
 // global queue with two pointers to vectors of minimizers
 // we use this instead if the sequences are too long
-static std::queue<std::tuple<std::vector<OLC::Minimizer>*, std::vector<OLC::Minimizer>*>> g_minimizer_pairs;
+static std::queue<std::tuple<uint32_t, std::vector<OLC::Minimizer>*, uint32_t, std::vector<OLC::Minimizer>*>> g_minimizer_pairs;
 
 // global vector with results
-static std::vector<OLC::Result> g_results;
+static std::vector<OLC::Result*> g_results;
 
 void worker()
 {
   while(true)
   {
     // Get the task and remove it from the pool
-    std::tuple<OLC::Sequence*, OLC::Sequence*> sequence_pair;
-    std::tuple<std::vector<OLC::Minimizer>*, std::vector<OLC::Minimizer>*> minimizer_pair;
+    uint32_t first_read_number;
+    OLC::Sequence* first_sequence;
+    std::vector<OLC::Minimizer>* first_minimizer;
+
+    uint32_t second_read_number;
+    OLC::Sequence* second_sequence;
+    std::vector<OLC::Minimizer>* second_minimizer;
 
     {
       std::lock_guard<std::mutex> resource_lock(g_resource_mutex);
@@ -41,19 +46,15 @@ void worker()
       if (g_sequence_pairs.empty())
         return;
 
-      sequence_pair = g_sequence_pairs.front();
+      std::tie(first_read_number, first_sequence, second_read_number, second_sequence) = g_sequence_pairs.front();
       g_sequence_pairs.pop();
-      minimizer_pair = g_minimizer_pairs.front();
+      std::tie(first_read_number, first_minimizer, second_read_number, second_minimizer) = g_minimizer_pairs.front();
       g_minimizer_pairs.pop();
     }
 
-    // Get the task sequences
-    const OLC::Sequence* sequence1 = std::get<0>(sequence_pair);
-    const OLC::Sequence* sequence2 = std::get<1>(sequence_pair);
-
     // Pull out the wrapped nucleotide vectors
-    const std::vector<OLC::Nucleotide> nucleotides1 = sequence1->getNucleotides()->getSequence();
-    const std::vector<OLC::Nucleotide> nucleotides2 = sequence2->getNucleotides()->getSequence();
+    const std::vector<OLC::Nucleotide> nucleotides1 = first_sequence->getNucleotides()->getSequence();
+    const std::vector<OLC::Nucleotide> nucleotides2 = second_sequence->getNucleotides()->getSequence();
 
     // If small enough, no need to use minimizers
     if (nucleotides1.size() < 20000 && nucleotides2.size() < 20000)
@@ -65,9 +66,6 @@ void worker()
       const uint32_t overlapSecondStart = overlap.getStartSecond();
       const uint32_t overlapLength = overlapFirstEnd - overlapFirstStart + 1;
 
-      const std::string sequence1_ident = sequence1->getIdentifier();
-      const std::string sequence2_ident = sequence2->getIdentifier();
-
       int32_t ahang = overlapFirstStart;
       int32_t bhang = nucleotides2.size() - overlapSecondEnd;
 
@@ -77,7 +75,7 @@ void worker()
       if (nucleotides1.size() > overlapSecondEnd)
         bhang *= -1;
 
-      const OLC::Result result(sequence1_ident, sequence2_ident, overlapLength, ahang, bhang);
+      OLC::Result* result = new OLC::Result(first_read_number, second_read_number, overlapLength, ahang, bhang);
 
       {
         std::lock_guard<std::mutex> result_lock(g_result_mutex);
@@ -133,8 +131,8 @@ int main(int argc, char** argv)
   {
     for (uint32_t j = i + 1; j < sequences.size(); ++j)
     {
-      g_sequence_pairs.emplace(sequences[i], sequences[j]);
-      g_minimizer_pairs.emplace(&minimizers[i], &minimizers[j]);
+      g_sequence_pairs.emplace(i, sequences[i], j, sequences[j]);
+      g_minimizer_pairs.emplace(i, &minimizers[i], j, &minimizers[j]);
     }
   }
 
@@ -150,6 +148,9 @@ int main(int argc, char** argv)
   // cleanup
   for (size_t i = 0; i < sequences.size(); ++i)
     delete sequences[i];
+
+  for (size_t i = 0; i < g_results.size(); ++i)
+    delete g_results[i];
 
   return 0;
 }
