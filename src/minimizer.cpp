@@ -4,7 +4,14 @@ namespace OLC
 {
 
 Minimizer::Minimizer(const std::vector<Nucleotide> &vector, const int position)
-  :vector_(vector), position_(position)
+  : vector_(vector),
+    position_(position)
+{
+
+}
+
+Minimizer::Minimizer(uint32_t size)
+  : vector_(std::vector<Nucleotide>(size, Nucleotide(NucleotideLetter::A)))
 {
 
 }

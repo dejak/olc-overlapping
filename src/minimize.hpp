@@ -8,7 +8,7 @@ namespace OLC
 {
 
   // Returns all the (w, k) inner and outer minimizers as defined in the (Roberts, 04) paper
-  std::vector<Minimizer> minimize(const std::vector<Nucleotide>& nucleotides, const int w, const int k);
+  std::vector<Minimizer>* minimize(const std::vector<Nucleotide>& nucleotides, const int w, const int k);
 }
 
 #endif // MINIMIZE_HPP_

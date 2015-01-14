@@ -20,6 +20,7 @@ class Minimizer
 
   public:
     Minimizer(const std::vector<Nucleotide> &vector, const int position);
+    Minimizer(uint32_t size);
     Nucleotide operator[](unsigned int index) const;
     std::size_t size() const;
     int getPosition() const {return position_;}

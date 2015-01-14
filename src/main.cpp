@@ -165,7 +165,7 @@ int main(int argc, char** argv)
   // read phase
   OLC::InputFileReader reader(file);
   const std::vector<OLC::Sequence*> sequences = reader.readSequences();
-  std::vector<std::vector<OLC::Minimizer>> minimizers;
+  std::vector<std::vector<OLC::Minimizer>*> minimizers;
 
   for (size_t i = 0; i < sequences.size(); ++i)
   {
@@ -175,7 +175,7 @@ int main(int argc, char** argv)
     if (sequence.size() >= SEQUENCE_THRESHOLD_LENGTH)
       minimizers.push_back(minimize(sequence, w, k));
     else
-      minimizers.push_back(std::vector<OLC::Minimizer>());
+      minimizers.push_back(nullptr);
   }
 
   // generate tasks so we can do this in parallel if possible
@@ -186,7 +186,7 @@ int main(int argc, char** argv)
     for (uint32_t j = i + 1; j < sequences.size(); ++j)
     {
       g_sequence_pairs.emplace(i + 1, sequences[i], j + 1, sequences[j]);
-      g_minimizer_pairs.emplace(i + 1, &minimizers[i], j + 1, &minimizers[j]);
+      g_minimizer_pairs.emplace(i + 1, minimizers[i], j + 1, minimizers[j]);
     }
   }
 
@@ -207,6 +207,9 @@ int main(int argc, char** argv)
   }
 
   // cleanup
+  for (size_t i = 0; i < minimizers.size(); ++i)
+    delete minimizers[i];
+
   for (size_t i = 0; i < sequences.size(); ++i)
     delete sequences[i];
 
