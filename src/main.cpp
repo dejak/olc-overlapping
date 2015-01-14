@@ -10,6 +10,7 @@
 #include "minimize.hpp"
 #include "comparator.hpp"
 #include "result.hpp"
+#include "minimizer.hpp"
 
 // mutex for shared resources
 static std::mutex g_resource_mutex;
@@ -85,8 +86,7 @@ void worker()
     }
     else
     {
-      std::vector<OLC::Minimizer> allMinimizers;
-      int sharedMinimizers = 0;
+      std::vector<OLC::Minimizer> allMinimizers; 
       for (size_t i = 0; i < first_minimizer -> size(); i++) {
         allMinimizers.push_back((*first_minimizer)[i]);
       }
@@ -111,8 +111,28 @@ void worker()
         int index = std::distance(allMinimizers.begin(), lower);
         codedSequence2.push_back(index);
       }
+ 
+      const OLC::Overlap overlap = OLC::compare(codedSequence1, codedSequence2);
+      const uint32_t overlapFirstEnd = (*first_minimizer)[overlap.getEndFirst()].getPosition() + (*first_minimizer)[overlap.getEndFirst()].size();
+      const uint32_t overlapSecondEnd = (*second_minimizer)[overlap.getEndSecond()].getPosition() + (*second_minimizer)[overlap.getEndSecond()].size();
+      const uint32_t overlapFirstStart = (*first_minimizer)[overlap.getStartFirst()].getPosition();
+      const uint32_t overlapSecondStart = (*second_minimizer)[overlap.getStartSecond()].getPosition();
+      const uint32_t overlapLength = overlapFirstEnd - overlapFirstStart + 1;
+      int32_t ahang = overlapFirstStart;
+      int32_t bhang = nucleotides2.size() - overlapSecondEnd;
 
-      // TODO: Poziv compare<int> sa coded sequence 2 i onda dekodirati opet nazad u result
+      if (overlapSecondStart > overlapFirstStart)
+        ahang *= -1;
+
+      if (nucleotides1.size() > overlapSecondEnd)
+        bhang *= -1;
+
+      OLC::Result* result = new OLC::Result(first_read_number, second_read_number, overlapLength, ahang, bhang);
+
+      {
+        std::lock_guard<std::mutex> result_lock(g_result_mutex);
+        g_results.push_back(result);
+      }
 
     }
   }

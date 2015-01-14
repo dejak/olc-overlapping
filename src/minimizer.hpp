@@ -22,7 +22,7 @@ class Minimizer
     Minimizer(const std::vector<Nucleotide> &vector, const int position);
     Nucleotide operator[](unsigned int index) const;
     std::size_t size() const;
-    int getPosition() const;
+    int getPosition() const {return position_;}
 
     bool operator==(const Minimizer &other) const;
     std::string toValueString() const;
