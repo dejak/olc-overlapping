@@ -14,6 +14,7 @@ enum NucleotideLetter : char
   G = 0x03
 };
 
+#pragma pack(1)
 class Nucleotide
 {
   private:
