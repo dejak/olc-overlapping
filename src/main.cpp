@@ -4,6 +4,7 @@
 #include <thread>
 #include <tuple>
 #include <condition_variable>
+#include <algorithm>
 
 #include "input_file_reader.hpp"
 #include "minimize.hpp"
@@ -84,6 +85,34 @@ void worker()
     }
     else
     {
+      std::vector<OLC::Minimizer> allMinimizers;
+      int sharedMinimizers = 0;
+      for (size_t i = 0; i < first_minimizer -> size(); i++) {
+        allMinimizers.push_back((*first_minimizer)[i]);
+      }
+      std::sort(allMinimizers.begin(), allMinimizers.end());
+      for (size_t i = 0; i < second_minimizer -> size(); i++) { 
+        if (!std::binary_search(allMinimizers.begin(), allMinimizers.end(), (*second_minimizer)[i])) {
+          allMinimizers.push_back((*second_minimizer)[i]);
+        }
+      }
+      std::sort(allMinimizers.begin(), allMinimizers.end());
+
+      std::vector<int> codedSequence1;
+      for (size_t i = 0; i < first_minimizer -> size(); i++) {
+        auto lower = std::lower_bound(allMinimizers.begin(), allMinimizers.end(), (*first_minimizer)[i]);
+        int index = std::distance(allMinimizers.begin(), lower);
+        codedSequence1.push_back(index);
+      }
+
+      std::vector<int> codedSequence2;
+      for (size_t i = 0; i < second_minimizer -> size(); i++) {
+        auto lower = std::lower_bound(allMinimizers.begin(), allMinimizers.end(), (*second_minimizer)[i]);
+        int index = std::distance(allMinimizers.begin(), lower);
+        codedSequence2.push_back(index);
+      }
+
+      // TODO: Poziv compare<int> sa coded sequence 2 i onda dekodirati opet nazad u result
 
     }
   }
