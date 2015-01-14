@@ -144,14 +144,17 @@ int main(int argc, char** argv)
 {
   std::ios_base::sync_with_stdio(false);
 
-  if (argc != 3)
+  if (argc != 4)
   {
-    std::cout << "Usage: " << argv[0] << " <minimum overlap length L> <FASTQ or FASTA file>\n";
+    std::cout << "Usage: " << argv[0] << " <minimum overlap length L> <FASTQ or FASTA file> <output file>\n";
     return 1;
   }
 
   // file with the data
   const std::string file = std::string(argv[2]);
+
+  // output file
+  const std::string output = std::string(argv[3]);
 
   // L is the minimum overlap length
   const uint32_t L = std::stoi(argv[1]);
@@ -199,12 +202,16 @@ int main(int argc, char** argv)
   for (uint8_t i = 0; i < threads.size(); ++i)
     threads[i].join();
 
+  std::ofstream output_stream(output);
+
   for (size_t i = 0; i < g_results.size(); ++i)
   {
     auto identifiers = g_results[i]->getIdentifiers();
 
-    std::cout << "Found overlap with length of " << g_results[i]->getLength() << " between " << std::get<0>(identifiers) << " and " << std::get<1>(identifiers) << "\n";
+    output_stream << "{OVL\nadj:N\nrds:"<< std::get<0>(identifiers) << "," << std::get<1>(identifiers) << "\nscr:0\nahg:" << g_results[i]->getAhng() << "\nbhg:" << g_results[i]->getBhng() << "\n}\n";
   }
+
+  output_stream.close();
 
   // cleanup
   for (size_t i = 0; i < minimizers.size(); ++i)
