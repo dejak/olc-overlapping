@@ -44,7 +44,7 @@ Overlap compare(const std::vector<Nucleotide>& first, const std::vector<Nucleoti
 
   for (std::size_t  i = 1; i < first.size() + 1; ++i)
   {
-    for (std::size_t  j = 1; j < first.size() + 1; ++j)
+    for (std::size_t  j = 1; j < second.size() + 1; ++j)
     {
       const int up    = values[i-1][j] - 4;
       const int left  = values[i][j-1] - 4;
