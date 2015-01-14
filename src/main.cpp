@@ -142,6 +142,7 @@ void worker()
 
       OLC::Result* result = new OLC::Result(first_read_number, second_read_number, overlapLength, ahang, bhang);
 
+      if (overlapLength > 0)
       {
         std::lock_guard<std::mutex> result_lock(g_result_mutex);
         g_results.push_back(result);
