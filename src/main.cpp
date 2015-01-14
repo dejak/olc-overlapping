@@ -29,6 +29,8 @@ static std::queue<std::tuple<uint32_t, std::vector<OLC::Minimizer>*, uint32_t, s
 // global vector with results
 static std::vector<OLC::Result*> g_results;
 
+static const uint32_t SEQUENCE_THRESHOLD_LENGTH = 20000;
+
 void worker()
 {
   while(true)
@@ -50,8 +52,8 @@ void worker()
 
       std::tie(first_read_number, first_sequence, second_read_number, second_sequence) = g_sequence_pairs.front();
       g_sequence_pairs.pop();
-      std::tie(first_read_number, first_minimizer, second_read_number, second_minimizer) = g_minimizer_pairs.front();
-      g_minimizer_pairs.pop();
+      //std::tie(first_read_number, first_minimizer, second_read_number, second_minimizer) = g_minimizer_pairs.front();
+      //g_minimizer_pairs.pop();
     }
 
     // Pull out the wrapped nucleotide vectors
@@ -59,7 +61,7 @@ void worker()
     const std::vector<OLC::Nucleotide> nucleotides2 = second_sequence->getNucleotides()->getSequence();
 
     // If small enough, no need to use minimizers
-    if (nucleotides1.size() < 20000 && nucleotides2.size() < 20000)
+    if (nucleotides1.size() < SEQUENCE_THRESHOLD_LENGTH && nucleotides2.size() < SEQUENCE_THRESHOLD_LENGTH)
     {
       const OLC::Overlap overlap = compare(nucleotides1, nucleotides2);
       const uint32_t overlapFirstEnd = overlap.getEndFirst();
@@ -170,7 +172,10 @@ int main(int argc, char** argv)
     const auto sequence = sequences[i]->getNucleotides()->getSequence();
 
     // calculate minimizers - both interior and end minimizers
-    minimizers.push_back(minimize(sequence, w, k));
+    if (sequence.size() >= SEQUENCE_THRESHOLD_LENGTH)
+      minimizers.push_back(minimize(sequence, w, k));
+    else
+      minimizers.push_back(std::vector<OLC::Minimizer>());
   }
 
   // generate tasks so we can do this in parallel if possible
