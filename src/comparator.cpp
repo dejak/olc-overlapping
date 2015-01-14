@@ -38,10 +38,10 @@ Overlap compare(const std::vector<Nucleotide>& first, const std::vector<Nucleoti
     {
       const int32_t up    = values[i-1][j] - 15;
       const int32_t left  = values[i][j-1] - 15;
-      int32_t diagonal    = values[i-1][j-1] - 1;
+      int32_t diagonal    = values[i-1][j-1] - 8;
 
       if (first[i-1].getValue() == second[j-1].getValue())
-        diagonal += 3;
+        diagonal += 18;
 
       if (up > left && up > diagonal)
       {
