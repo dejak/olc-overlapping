@@ -179,9 +179,14 @@ int main(int argc, char** argv)
   const std::vector<OLC::Sequence*> sequences = reader.readSequences();
   std::vector<std::vector<OLC::Minimizer>*> minimizers;
 
+  uint32_t max_sequence_size = 0;
+
   for (size_t i = 0; i < sequences.size(); ++i)
   {
     const auto sequence = sequences[i]->getNucleotides()->getSequence();
+
+    if (max_sequence_size < sequence.size())
+      max_sequence_size = sequence.size();
 
     // calculate minimizers - both interior and end minimizers
     if (sequence.size() >= SEQUENCE_THRESHOLD_LENGTH)
@@ -205,8 +210,11 @@ int main(int argc, char** argv)
   // use concurrent minimizer matching
   uint32_t num_threads = std::thread::hardware_concurrency();
 
-  if (num_threads > 3)
-    num_threads = 3;
+  // scale thread number based on sequence size
+  if (10000 <= max_sequence_size && max_sequence_size <= 100000)
+    num_threads >>= 1;
+  else if (100000 <= max_sequence_size)
+    num_threads = 1;
 
   std::vector<std::thread> threads(3);
 
