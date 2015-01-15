@@ -89,6 +89,7 @@ void worker()
     else
     {
       std::vector<OLC::Minimizer> allMinimizers;
+      allMinimizers.reserve(first_minimizer->size() + second_minimizer->size());
 
       for (size_t i = 0; i < first_minimizer->size(); ++i)
         allMinimizers.push_back((*first_minimizer)[i]);
@@ -108,9 +109,8 @@ void worker()
 
       for (size_t i = 0; i < first_minimizer->size(); ++i)
       {
-        auto lower = std::lower_bound(allMinimizers.begin(), allMinimizers.end(), (*first_minimizer)[i]);
-        int index = std::distance(allMinimizers.begin(), lower);
-        codedSequence1.push_back(index);
+        const auto lower = std::lower_bound(allMinimizers.begin(), allMinimizers.end(), (*first_minimizer)[i]);
+        codedSequence1.emplace_back(std::distance(allMinimizers.begin(), lower));
       }
 
       std::vector<int> codedSequence2;
@@ -118,10 +118,12 @@ void worker()
 
       for (size_t i = 0; i < second_minimizer->size(); ++i)
       {
-        auto lower = std::lower_bound(allMinimizers.begin(), allMinimizers.end(), (*second_minimizer)[i]);
-        int index = std::distance(allMinimizers.begin(), lower);
-        codedSequence2.push_back(index);
+        const auto lower = std::lower_bound(allMinimizers.begin(), allMinimizers.end(), (*second_minimizer)[i]);
+        codedSequence2.emplace_back(std::distance(allMinimizers.begin(), lower));
       }
+
+      allMinimizers.clear();
+      std::vector<OLC::Minimizer>().swap(allMinimizers);
 
       const OLC::Overlap overlap = OLC::compare(codedSequence1, codedSequence2);
       const uint32_t overlapFirstEnd = (*first_minimizer)[overlap.getEndFirst()].getPosition() + (*first_minimizer)[overlap.getEndFirst()].size();
