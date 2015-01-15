@@ -71,9 +71,9 @@ void worker()
       const uint32_t overlapLength = overlapFirstEnd - overlapFirstStart + 1;
 
       int32_t ahang = overlapFirstStart;
-      int32_t bhang = nucleotides2.size() - overlapSecondEnd;
+      int32_t bhang = nucleotides2.size() - overlapSecondEnd - 1;
 
-      if (overlapSecondStart > overlapFirstStart)
+      if (overlapSecondStart < overlapFirstStart)
         ahang *= -1;
 
       if (nucleotides1.size() > overlapSecondEnd)
@@ -132,9 +132,9 @@ void worker()
       const uint32_t overlapSecondStart = (*second_minimizer)[overlap.getStartSecond()].getPosition();
       const uint32_t overlapLength = overlapFirstEnd - overlapFirstStart + 1;
       int32_t ahang = overlapFirstStart;
-      int32_t bhang = nucleotides2.size() - overlapSecondEnd;
+      int32_t bhang = nucleotides2.size() - overlapSecondEnd - 1;
 
-      if (overlapSecondStart > overlapFirstStart)
+      if (overlapSecondStart < overlapFirstStart)
         ahang *= -1;
 
       if (nucleotides1.size() > overlapSecondEnd)
