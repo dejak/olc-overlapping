@@ -11,7 +11,7 @@ Minimizer::Minimizer(const std::vector<Nucleotide> &vector, const int position)
 }
 
 Minimizer::Minimizer(uint32_t size)
-  : vector_(std::vector<Nucleotide>(size, Nucleotide(NucleotideLetter::A)))
+  : vector_(std::vector<Nucleotide>(size, Nucleotide(NucleotideLetter::G)))
 {
 
 }
