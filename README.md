@@ -18,7 +18,7 @@ Run make test in case you need to run tests
 Execution
 ---------
 From the cloned repository
-  ./bin/bioinf <L> <input_file> <output_file>
+  ./bin/bioinf L input_file output_file
 
 Course
 ------
