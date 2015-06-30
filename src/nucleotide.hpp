@@ -25,6 +25,10 @@ class Nucleotide
 
     char getNucleotide() const;
     int getValue() const;
+
+    bool operator==(const Nucleotide &other) const {
+      return this->value_ == other.getValue();
+    }
 };
 
 }
