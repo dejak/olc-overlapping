@@ -2,7 +2,7 @@ ARCH = $(shell uname -m)
 
 CXXFLAGS = -std=c++11 -pipe -Wall -Wextra -fno-builtin
 DFLAGS =
-OFLAGS = -O3 -flto
+OFLAGS = -O3
 LFLAGS = -pthread -L. -L/usr/local/lib/
 
 ifeq ($(ARCH),x86_64)
