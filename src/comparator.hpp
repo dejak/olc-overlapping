@@ -2,6 +2,8 @@
 #define COMPARATOR_HPP_
 
 #include <vector>
+#include <tuple>
+
 #include "overlap.hpp"
 #include "nucleotide.hpp"
 
