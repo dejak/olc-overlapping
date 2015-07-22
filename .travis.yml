@@ -33,6 +33,7 @@ install:
 
 script:
   - make
+  - make clean
   - make test
 
 notifications-policy: &notifications-policy
