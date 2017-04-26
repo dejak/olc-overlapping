@@ -145,9 +145,10 @@ void worker()
       if (overlapLength > 0)
       {
         std::lock_guard<std::mutex> result_lock(g_result_mutex);
-        g_results.push_back(result);
+        g_results.emplace_back(result);
       }
-
+      else
+        delete result;
     }
   }
 }
