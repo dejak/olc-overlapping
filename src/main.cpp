@@ -220,7 +220,7 @@ int main(int argc, char** argv)
   else if (100000 <= max_sequence_size)
     num_threads = 1;
 
-  std::vector<std::thread> threads(3);
+  std::vector<std::thread> threads(num_threads);
 
   for (uint8_t i = 0; i < threads.size(); ++i)
     threads[i] = std::thread(worker);
