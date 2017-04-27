@@ -25,12 +25,40 @@ class Minimizer
     std::size_t size() const;
     int getPosition() const {return position_;}
 
-    bool operator==(const Minimizer &other) const;
     std::string toValueString() const;
     std::string toNucleotideString() const;
 };
 
-bool operator<(const Minimizer &first, const Minimizer &second);
+inline bool operator<(const Minimizer &first, const Minimizer &second)
+{
+  for (std::size_t i = 0; i < first.size(); ++i)
+  {
+    if (first[i].getValue() < second[i].getValue())
+      return true;
+
+    if (first[i].getValue() > second[i].getValue())
+      return false;
+  }
+
+  return false;
+}
+
+inline bool operator==(const Minimizer& first, const Minimizer &second)
+{
+  const std::size_t thisSize = first.size();
+  const std::size_t otherSize = second.size();
+
+  if (thisSize != otherSize)
+    return false;
+
+  for (std::size_t i = 0; i < thisSize; ++i)
+  {
+    if (first[i].getValue() != second[i].getValue())
+      return false;
+  }
+
+  return true;
+}
 
 }
 
