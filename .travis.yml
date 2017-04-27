@@ -1,35 +1,51 @@
 language: cpp
+dist: trusty
 
-compiler:
-  - clang
-  - gcc
+matrix:
+  include:
+    - os: linux
+      compiler: gcc-5
+      env: COMPILER=g++
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - gcc-5
+            - g++-5
+
+    - os: linux
+      compiler: clang-3.6
+      env: COMPILER=clang++
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-trusty
+          packages:
+            - g++-5
+            - clang-3.6
+            - llvm-3.6-dev # for LLVMGold.so
+            - binutils-gold
+
+    - os: osx
+      osx_image: xcode8.3
+      compiler: clang
 
 branches:
   only:
     - master
 
 before_install:
-  # g++ 4.8.1
-  - if [ "$CXX" == "g++" ]; then sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test; fi
-  # clang 3.5
-  - if [ "$CXX" == "clang++" ]; then sudo add-apt-repository -y ppa:ubuntu-toolchain-r/test; fi
-  - if [ "$CXX" == "clang++" ]; then sudo sh -c "echo 'deb http://llvm.org/apt/precise/ llvm-toolchain-precise-3.5 main' >> /etc/apt/sources.list"; fi
-  - if [ "$CXX" == "clang++" ]; then wget -O - http://llvm.org/apt/llvm-snapshot.gpg.key | sudo apt-key add -; fi
-  - sudo apt-get update -qq
+  - export SYSTEM=$(uname)
+  - if [ "$SYSTEM" != "Darwin" ]; then sudo apt-get update -qq; fi
+  - if [ "$SYSTEM" != "Darwin" ]; then sudo apt-get install build-essential m4 libgmp3-dev cmake; fi
 
 install:
-  - sudo apt-get install build-essential m4 libgmp3-dev cmake
-
-  # g++4.8.1
-  - if [ "$CXX" = "g++" ]; then sudo apt-get install -qq g++-4.8; fi
-  - if [ "$CXX" = "g++" ]; then export CXX="g++-4.8"; CC="gcc-4.8"; fi
-
-  # clang 3.5
-  - if [ "$CXX" == "clang++" ]; then sudo apt-get -qq update; fi
-  - if [ "$CXX" == "clang++" ]; then sudo apt-get install --allow-unauthenticated -qq binutils-gold clang-3.5; fi
-  - if [ "$CXX" == "clang++" ]; then export CXX="clang++-3.5"; CC="clang-3.5"; fi
-  - if [ "$CXX" == "clang++" ]; then export LD_LIBRARY_PATH="/usr/lib/llvm-${LLVM_VERSION}/lib/"; fi
-  - if [ "$CXX" == "clang++" ]; then export PATH="/usr/lib/llvm-${LLVM_VERSION}/bin:$PATH"; fi
+  - if [ "$COMPILER" = "g++" ]; then export CXX="g++-5" CC="gcc-5"; fi
+  - if [ "$COMPILER" = "clang++" ]; then export CXX="clang++-3.6" CC="clang-3.6"; fi
+  - if [ "$COMPILER" = "clang++" ]; then sudo update-alternatives --install /usr/bin/ld ld /usr/bin/ld.gold 20; fi
+  - if [ "$COMPILER" = "clang++" ]; then sudo update-alternatives --install /usr/bin/ld ld /usr/bin/ld.bfd 10; fi
 
 script:
   - make
