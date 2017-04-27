@@ -1,6 +1,6 @@
 ARCH = $(shell uname -m)
 
-CXXFLAGS = -std=c++11 -pipe -Wall -Wextra -fno-builtin -flto
+CXXFLAGS = -std=c++11 -pipe -Wall -Wextra -fno-builtin -flto -fno-rtti
 DFLAGS =
 OFLAGS = -O3
 LFLAGS = -pthread -L. -L/usr/local/lib/
