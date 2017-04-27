@@ -57,8 +57,8 @@ void worker()
     }
 
     // Pull out the wrapped nucleotide vectors
-    const std::vector<OLC::Nucleotide> nucleotides1 = first_sequence->getNucleotides()->getSequence();
-    const std::vector<OLC::Nucleotide> nucleotides2 = second_sequence->getNucleotides()->getSequence();
+    const std::vector<OLC::Nucleotide>& nucleotides1 = first_sequence->getNucleotides()->getSequence();
+    const std::vector<OLC::Nucleotide>& nucleotides2 = second_sequence->getNucleotides()->getSequence();
 
     // If small enough, no need to use minimizers
     if (nucleotides1.size() < SEQUENCE_THRESHOLD_LENGTH && nucleotides2.size() < SEQUENCE_THRESHOLD_LENGTH)
