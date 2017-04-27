@@ -18,7 +18,7 @@ Execution
 ---------
 From the cloned repository:
 
-    `./bin/bioinf L input_file output_file`
+    ./bin/bioinf <minimum overlap length L> <FASTQ or FASTA file> <output file>
 
 Course
 ------
