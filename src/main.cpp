@@ -193,8 +193,6 @@ int main(int argc, char** argv)
   }
 
   // generate tasks so we can do this in parallel if possible
-  std::queue<std::tuple<uint32_t, uint32_t>> tasks;
-
   for (uint32_t i = 0; i < sequences.size(); ++i)
   {
     for (uint32_t j = i + 1; j < sequences.size(); ++j)
