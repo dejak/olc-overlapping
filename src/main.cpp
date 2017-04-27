@@ -29,7 +29,7 @@ static std::ofstream output_stream;
 
 static const uint32_t SEQUENCE_THRESHOLD_LENGTH = 20000;
 
-void worker()
+static void worker()
 {
   while(true)
   {
