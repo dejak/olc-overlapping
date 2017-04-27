@@ -89,14 +89,14 @@ void worker()
       allMinimizers.reserve(first_minimizer->size() + second_minimizer->size());
 
       for (size_t i = 0; i < first_minimizer->size(); ++i)
-        allMinimizers.push_back((*first_minimizer)[i]);
+        allMinimizers.emplace_back((*first_minimizer)[i]);
 
       std::sort(allMinimizers.begin(), allMinimizers.end());
 
       for (size_t i = 0; i < second_minimizer->size(); ++i) 
       {
         if (!std::binary_search(allMinimizers.begin(), allMinimizers.end(), (*second_minimizer)[i]))
-          allMinimizers.push_back((*second_minimizer)[i]);
+          allMinimizers.emplace_back((*second_minimizer)[i]);
       }
 
       std::sort(allMinimizers.begin(), allMinimizers.end());
