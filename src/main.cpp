@@ -9,7 +9,6 @@
 #include "input_file_reader.hpp"
 #include "minimize.hpp"
 #include "comparator.hpp"
-#include "result.hpp"
 #include "minimizer.hpp"
 
 // mutex for shared resources
@@ -26,8 +25,7 @@ static std::queue<std::tuple<uint32_t, OLC::Sequence*, uint32_t, OLC::Sequence*>
 // we use this instead if the sequences are too long
 static std::queue<std::tuple<uint32_t, std::vector<OLC::Minimizer>*, uint32_t, std::vector<OLC::Minimizer>*>> g_minimizer_pairs;
 
-// global vector with results
-static std::vector<OLC::Result*> g_results;
+static std::ofstream output_stream;
 
 static const uint32_t SEQUENCE_THRESHOLD_LENGTH = 20000;
 
@@ -79,11 +77,10 @@ void worker()
       if (nucleotides1.size() > overlapSecondEnd)
         bhang *= -1;
 
-      OLC::Result* result = new OLC::Result(first_read_number, second_read_number, overlapLength, ahang, bhang);
-
+      if (overlapLength > 0)
       {
         std::lock_guard<std::mutex> result_lock(g_result_mutex);
-        g_results.push_back(result);
+        output_stream << "{OVL\nadj:N\nrds:"<< first_read_number << "," << second_read_number << "\nscr:0\nahg:" << ahang << "\nbhg:" << bhang << "\n}\n";
       }
     }
     else
@@ -140,15 +137,11 @@ void worker()
       if (nucleotides1.size() > overlapSecondEnd)
         bhang *= -1;
 
-      OLC::Result* result = new OLC::Result(first_read_number, second_read_number, overlapLength, ahang, bhang);
-
       if (overlapLength > 0)
       {
         std::lock_guard<std::mutex> result_lock(g_result_mutex);
-        g_results.emplace_back(result);
+        output_stream << "{OVL\nadj:N\nrds:"<< first_read_number << "," << second_read_number << "\nscr:0\nahg:" << ahang << "\nbhg:" << bhang << "\n}\n";
       }
-      else
-        delete result;
     }
   }
 }
@@ -222,20 +215,14 @@ int main(int argc, char** argv)
 
   std::vector<std::thread> threads(num_threads);
 
+  output_stream.open(output);
+
   for (uint8_t i = 0; i < threads.size(); ++i)
     threads[i] = std::thread(worker);
 
   for (uint8_t i = 0; i < threads.size(); ++i)
     threads[i].join();
 
-  std::ofstream output_stream(output);
-
-  for (size_t i = 0; i < g_results.size(); ++i)
-  {
-    auto identifiers = g_results[i]->getIdentifiers();
-
-    output_stream << "{OVL\nadj:N\nrds:"<< std::get<0>(identifiers) << "," << std::get<1>(identifiers) << "\nscr:0\nahg:" << g_results[i]->getAhng() << "\nbhg:" << g_results[i]->getBhng() << "\n}\n";
-  }
 
   output_stream.close();
 
@@ -245,9 +232,6 @@ int main(int argc, char** argv)
 
   for (size_t i = 0; i < sequences.size(); ++i)
     delete sequences[i];
-
-  for (size_t i = 0; i < g_results.size(); ++i)
-    delete g_results[i];
 
   return 0;
 }
