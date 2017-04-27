@@ -10,15 +10,15 @@ Requirements
 
 Installation
 ------------
-Simply run 
-  make
-from the folder you have cloned the repository into
-Run make test in case you need to run tests
+Simply run `make` from the folder you have cloned the repository into.
+
+Run `make test` in case you need to run tests.
 
 Execution
 ---------
-From the cloned repository
-  ./bin/bioinf L input_file output_file
+From the cloned repository:
+
+    `./bin/bioinf L input_file output_file`
 
 Course
 ------
