@@ -8,8 +8,8 @@ Nucleotides::Nucleotides()
 
 }
 
-Nucleotides::Nucleotides(const std::vector<Nucleotide>& sequence)
-  : sequence_(sequence)
+Nucleotides::Nucleotides(std::vector<Nucleotide> sequence)
+  : sequence_(std::move(sequence))
 {
 
 }

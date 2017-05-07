@@ -9,7 +9,7 @@ namespace OLC
 {
 
 // Implementation of FormatParser for the FASTA format
-class FASTAParser : protected FormatParser
+class FASTAParser final : protected FormatParser
 {
   public:
     FASTAParser(std::ifstream& in);

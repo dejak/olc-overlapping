@@ -1,15 +1,18 @@
 #ifndef INPUT_READER_HPP_
 #define INPUT_READER_HPP_
 
-#include "sequence.hpp"
+#include <vector>
 
 namespace OLC
 {
 
+class Sequence;
+
 class InputReader
 {
   public:
-    virtual std::vector<OLC::Sequence*> readSequences() = 0;
+    virtual std::vector<Sequence*> readSequences() = 0;
+    virtual ~InputReader() = default;
 };
 
 }

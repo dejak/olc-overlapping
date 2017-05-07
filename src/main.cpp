@@ -6,6 +6,7 @@
 #include <condition_variable>
 #include <algorithm>
 
+#include "sequence.hpp"
 #include "input_file_reader.hpp"
 #include "minimize.hpp"
 #include "comparator.hpp"
@@ -157,7 +158,7 @@ int main(int argc, char** argv)
   }
 
   // file with the data
-  const std::string file = std::string(argv[2]);
+  const std::string filename = argv[2];
 
   // output file
   const std::string output = std::string(argv[3]);
@@ -172,8 +173,8 @@ int main(int argc, char** argv)
   const uint32_t k = (L + 1) / 2;
 
   // read phase
-  OLC::InputFileReader reader(file);
-  const std::vector<OLC::Sequence*> sequences = reader.readSequences();
+  std::unique_ptr<OLC::InputFileReader> reader(new OLC::InputFileReader(filename));
+  const std::vector<OLC::Sequence*> sequences = reader->readSequences();
   std::vector<std::vector<OLC::Minimizer>*> minimizers;
 
   uint32_t max_sequence_size = 0;
@@ -203,24 +204,18 @@ int main(int argc, char** argv)
   }
 
   // use concurrent minimizer matching
-  uint32_t num_threads = std::thread::hardware_concurrency();
+  const uint32_t num_threads = std::thread::hardware_concurrency();
 
-  // scale thread number based on sequence size
-  if (10000 <= max_sequence_size && max_sequence_size <= 100000)
-    num_threads >>= 1;
-  else if (100000 <= max_sequence_size)
-    num_threads = 1;
-
-  std::vector<std::thread> threads(num_threads);
 
   output_stream.open(output);
 
-  for (uint8_t i = 0; i < threads.size(); ++i)
-    threads[i] = std::thread(worker);
+  std::vector<std::thread> threads;
 
-  for (uint8_t i = 0; i < threads.size(); ++i)
-    threads[i].join();
+  for (uint8_t i = 0; i < num_threads; ++i)
+    threads.emplace_back(worker);
 
+  for (auto& thread : threads)
+    thread.join();
 
   output_stream.close();
 

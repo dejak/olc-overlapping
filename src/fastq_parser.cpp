@@ -16,7 +16,7 @@ FASTQParser::~FASTQParser()
 
 }
 
-const std::vector<OLC::Sequence*> FASTQParser::readSequences()
+const std::vector<Sequence*> FASTQParser::readSequences()
 {
   std::vector<OLC::Sequence*> sequences;
 

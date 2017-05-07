@@ -17,7 +17,7 @@ class Nucleotides
 
   public:
     Nucleotides();
-    Nucleotides(const std::vector<OLC::Nucleotide>& sequence);
+    Nucleotides(std::vector<Nucleotide> sequence);
 
     // disable copying
 

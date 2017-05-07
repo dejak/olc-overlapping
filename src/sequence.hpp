@@ -17,11 +17,23 @@ class Sequence
     OLC::Nucleotides *nucleotides_;
 
   public:
-    Sequence(const std::string& identifier, const std::string& description, OLC::Nucleotides* nucleotides);
-    ~Sequence();
+    template<typename I, typename D>
+    Sequence(I&& identifier, D&& description, OLC::Nucleotides* nucleotides) :
+      identifier_(std::forward<I>(identifier)),
+      description_(std::forward<D>(description)),
+      nucleotides_(nucleotides)
+    {
 
-    const std::string getIdentifier()        const { return identifier_; }
-    const std::string getDescription()       const { return description_; }
+    }
+
+    ~Sequence()
+    {
+      if (nucleotides_ != nullptr)
+        delete nucleotides_;
+    }
+
+    const std::string& getIdentifier()        const { return identifier_; }
+    const std::string& getDescription()       const { return description_; }
     const OLC::Nucleotides *getNucleotides()  const { return nucleotides_; }
 };
 
