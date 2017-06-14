@@ -18,7 +18,7 @@ using Position = std::tuple<uint32_t, uint32_t>;
 // bigger price for insertions and removals to allow for more strict overlaps while maintaining the possibility
 // to handle large error reads.
 template <typename T>
-Overlap compare(const std::vector<T>& first, const std::vector<T>& second)
+std::pair<bool, Overlap> compare(const std::vector<T>& first, const std::vector<T>& second)
 {
   std::vector<std::vector<int32_t>> values;
   std::vector<std::vector<Position>> positions;
@@ -34,16 +34,16 @@ Overlap compare(const std::vector<T>& first, const std::vector<T>& second)
       positionRow.emplace_back(0, 0);
     }
 
-    values.push_back(row);
-    positions.push_back(positionRow);
+    values.emplace_back(std::move(row));
+    positions.emplace_back(std::move(positionRow));
   }
 
   int32_t maxValue = 0;
   Position maxPosition(0, 0);
 
-  for (std::size_t  i = 1; i < first.size() + 1; ++i)
+  for (std::size_t i = 1; i < first.size() + 1; ++i)
   {
-    for (std::size_t  j = 1; j < second.size() + 1; ++j)
+    for (std::size_t j = 1; j < second.size() + 1; ++j)
     {
       const int32_t up    = values[i-1][j] - 15;
       const int32_t left  = values[i][j-1] - 15;
@@ -99,11 +99,18 @@ Overlap compare(const std::vector<T>& first, const std::vector<T>& second)
     if (values[std::get<0>(current)][std::get<1>(current)] == 0)
       break;
 
-    path.push_back(current);
+    path.emplace_back(current);
     current = positions[std::get<0>(current)][std::get<1>(current)];
   }
 
-  return Overlap(std::get<0>(path[path.size()-1]), std::get<0>(path[0]), std::get<1>(path[path.size()-1]), std::get<1>(path[0]));
+  if (path.empty())
+    return std::make_pair(false, Overlap());
+
+  return std::make_pair(true,
+                        Overlap(std::get<0>(path.back()),
+                                std::get<0>(path.front()),
+                                std::get<1>(path.back()),
+                                std::get<1>(path.front())));
 }
 
 }

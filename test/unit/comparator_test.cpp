@@ -25,12 +25,19 @@ TEST_CASE("comparator methods", "[comparator]")
   second.push_back(Nucleotide(NucleotideLetter(0x02)));
   second.push_back(Nucleotide(NucleotideLetter(0x01)));
 
-  const Overlap overlap = compare(first, second);
+  bool overlap_exists;
+  Overlap overlap;
+  std::tie(overlap_exists, overlap) = compare(first, second);
   const uint32_t overlapFirstEnd = overlap.getEndFirst();
   const uint32_t overlapSecondEnd = overlap.getEndSecond();
   const uint32_t overlapFirstStart = overlap.getStartFirst();
   const uint32_t overlapSecondStart = overlap.getStartSecond();
   const int overlapLength = overlapFirstEnd - overlapFirstStart + 1;
+
+  SECTION("check overlap existence")
+  {
+    REQUIRE(overlap_exists == true);
+  }
 
   SECTION("check overlap length")
   {

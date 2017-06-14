@@ -14,16 +14,12 @@ class InputFileReader final : public InputReader
 {
 public:
 
-  InputFileReader(const std::string& filename) :
-    InputReader()
+  InputFileReader(const std::string& filename) noexcept :
+    InputReader(),
+    in_(std::ifstream(filename))
   {
-    in_.open(filename);
   }
 
-  ~InputFileReader()
-  {
-    in_.close();
-  }
 
   virtual std::vector<Sequence*> readSequences() override
   {

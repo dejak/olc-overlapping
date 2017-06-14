@@ -62,7 +62,13 @@ static void worker()
     // If small enough, no need to use minimizers
     if (nucleotides1.size() < SEQUENCE_THRESHOLD_LENGTH && nucleotides2.size() < SEQUENCE_THRESHOLD_LENGTH)
     {
-      const OLC::Overlap overlap = compare(nucleotides1, nucleotides2);
+      bool overlap_exists;
+      OLC::Overlap overlap;
+      std::tie(overlap_exists, overlap)  = compare(nucleotides1, nucleotides2);
+
+      if (!overlap_exists)
+        continue;
+
       const uint32_t overlapFirstEnd = overlap.getEndFirst();
       const uint32_t overlapSecondEnd = overlap.getEndSecond();
       const uint32_t overlapFirstStart = overlap.getStartFirst();
@@ -123,7 +129,13 @@ static void worker()
       allMinimizers.clear();
       std::vector<OLC::Minimizer>().swap(allMinimizers);
 
-      const OLC::Overlap overlap = OLC::compare(codedSequence1, codedSequence2);
+      bool overlap_exists;
+      OLC::Overlap overlap;
+      std::tie(overlap_exists, overlap) = OLC::compare(codedSequence1, codedSequence2);
+
+      if (!overlap_exists)
+        continue;
+
       const uint32_t overlapFirstEnd = (*first_minimizer)[overlap.getEndFirst()].getPosition() + (*first_minimizer)[overlap.getEndFirst()].size();
       const uint32_t overlapSecondEnd = (*second_minimizer)[overlap.getEndSecond()].getPosition() + (*second_minimizer)[overlap.getEndSecond()].size();
       const uint32_t overlapFirstStart = (*first_minimizer)[overlap.getStartFirst()].getPosition();
@@ -147,7 +159,7 @@ static void worker()
   }
 }
 
-int main(int argc, char** argv)
+int32_t main(const int32_t argc, const char** argv)
 {
   std::ios_base::sync_with_stdio(false);
 
@@ -173,8 +185,8 @@ int main(int argc, char** argv)
   const uint32_t k = (L + 1) / 2;
 
   // read phase
-  std::unique_ptr<OLC::InputFileReader> reader(new OLC::InputFileReader(filename));
-  const std::vector<OLC::Sequence*> sequences = reader->readSequences();
+  OLC::InputFileReader reader(filename);
+  const std::vector<OLC::Sequence*> sequences = reader.readSequences();
   std::vector<std::vector<OLC::Minimizer>*> minimizers;
 
   uint32_t max_sequence_size = 0;
@@ -206,7 +218,6 @@ int main(int argc, char** argv)
   // use concurrent minimizer matching
   const uint32_t num_threads = std::thread::hardware_concurrency();
 
-
   output_stream.open(output);
 
   std::vector<std::thread> threads;
@@ -217,7 +228,7 @@ int main(int argc, char** argv)
   for (auto& thread : threads)
     thread.join();
 
-  output_stream.close();
+  output_stream.flush();
 
   // cleanup
   for (size_t i = 0; i < minimizers.size(); ++i)
