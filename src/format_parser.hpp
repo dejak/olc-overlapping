@@ -15,12 +15,14 @@ class FormatParser
 {
   public:
     virtual const std::vector<OLC::Sequence*> readSequences() = 0;
-    virtual ~FormatParser();
+    virtual ~FormatParser() = default;
 
   protected:
     std::ifstream& in_;
 
-    FormatParser(std::ifstream& in);
+    FormatParser(std::ifstream& in) noexcept : in_(in)
+    {
+    }
 
     // Used for replacing gaps in error prone reads with random nucleotides as 
     // overlap algorithms should still be able to handle it.

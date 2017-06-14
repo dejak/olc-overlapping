@@ -12,8 +12,11 @@ namespace OLC
 class FASTQParser final : protected FormatParser
 {
   public:
-    FASTQParser(std::ifstream& in);
-    ~FASTQParser();
+    FASTQParser(std::ifstream& in) noexcept : FormatParser(in)
+    {
+    }
+
+    ~FASTQParser() = default;
 
     const std::vector<Sequence*> readSequences() override;
 };

@@ -5,17 +5,6 @@
 namespace OLC
 {
 
-FormatParser::FormatParser(std::ifstream& in)
-  : in_(in)
-{
-
-}
-
-FormatParser::~FormatParser()
-{
-  in_.close();
-}
-
 NucleotideLetter FormatParser::getRandomNucleotide() const
 {
   std::random_device rd;

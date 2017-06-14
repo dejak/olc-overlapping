@@ -12,8 +12,11 @@ namespace OLC
 class FASTAParser final : protected FormatParser
 {
   public:
-    FASTAParser(std::ifstream& in);
-    ~FASTAParser();
+    FASTAParser(std::ifstream& in) noexcept : FormatParser(in)
+    {
+    }
+
+    ~FASTAParser() = default;
 
     const std::vector<OLC::Sequence*> readSequences();
 };

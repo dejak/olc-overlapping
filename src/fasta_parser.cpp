@@ -6,17 +6,6 @@
 namespace OLC
 {
 
-FASTAParser::FASTAParser(std::ifstream& in)
-  : FormatParser(in)
-{
-
-}
-
-FASTAParser::~FASTAParser()
-{
-
-}
-
 const std::vector<Sequence*> FASTAParser::readSequences()
 {
   std::vector<OLC::Sequence*> sequences;

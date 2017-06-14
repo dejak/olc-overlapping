@@ -5,20 +5,9 @@
 namespace OLC
 {
 
-FASTQParser::FASTQParser(std::ifstream& in)
-  : FormatParser(in)
-{
-
-}
-
-FASTQParser::~FASTQParser()
-{
-
-}
-
 const std::vector<Sequence*> FASTQParser::readSequences()
 {
-  std::vector<OLC::Sequence*> sequences;
+  std::vector<Sequence*> sequences;
 
   if (FormatParser::in_.fail())
     return sequences;
@@ -30,7 +19,7 @@ const std::vector<Sequence*> FASTQParser::readSequences()
 
     // invalid line, try to start over
 
-    if (identifier.empty() || identifier.at(0) != '@')
+    if (identifier.empty() || identifier[0] != '@')
       continue;
 
     // cut the initial '@' off
@@ -46,14 +35,19 @@ const std::vector<Sequence*> FASTQParser::readSequences()
       identifier = identifier.substr(0, delimiterIndex);
     }
 
-    std::string sequence;
     Nucleotides* nucleotides = new Nucleotides();
-    nucleotides->reserve(sequence.size());
 
-    std::getline(FormatParser::in_, sequence);
-
-    for (const auto c : sequence)
+    char c;
+    while ((c = FormatParser::in_.get()) != EOF)
     {
+#ifdef _WIN32
+      if (c == '\r' || c == '\n')
+        break;
+#else
+      if (c == '\n')
+        break;
+#endif
+
       switch (c)
       {
         case 'A': nucleotides->push_back(NucleotideLetter::A); break;
@@ -70,14 +64,14 @@ const std::vector<Sequence*> FASTQParser::readSequences()
 
     // invalid line, try to start over
 
-    if (plus.empty() || plus.at(0) != '+')
+    if (plus.empty() || plus[0] != '+')
       continue;
 
     // ignore quality line
 
     FormatParser::in_.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
 
-    if (!identifier.empty() && !sequence.empty() && !plus.empty())
+    if (!identifier.empty() && !nucleotides->getSequence().empty() && !plus.empty())
     {
       Sequence* sequence = new Sequence(identifier, description, nucleotides);
       sequences.push_back(sequence);

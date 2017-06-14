@@ -40,7 +40,7 @@ public:
       return parser.readSequences();
     }
     else
-      return std::vector<OLC::Sequence*>();
+      return std::vector<Sequence*>();
   }
 
 private:
